@@ -11,10 +11,11 @@ public class Gamemanager : MonoBehaviour
     public int p1score = 3; 
     public int p2score = 3; 
     public bool gameProg = false; 
-    private string p1face = "Miles";
-    private string p2face = "Brack";
-    
-    public BongBall bongBall; // Reference to BongBall script 
+    public string p1face = "Miles";
+    public string p2face = "Brack";
+
+    public BongBall bongBall; // Reference to BongBall script
+    public ScreenManager screenManager; // Reference to ScreenManager script 
     public TextMeshProUGUI scoreText; 
     public TextMeshProUGUI p1express; 
     public TextMeshProUGUI p2express; 
@@ -31,82 +32,13 @@ public class Gamemanager : MonoBehaviour
             p1score--; 
             Debug.Log("Player 2 Scored! Player 1: " + p1score + " Player 2: " + p2score); 
         } 
-        UpdateScore(); 
+        screenManager.UpdateScore(p1score, p1face, p2score, p2face); 
         if (gameProg) 
         { 
             StartCoroutine(centBong()); 
         } 
     } 
-    public void UpdateScore() 
-    { 
-        if (p1face == "Miles") 
-            if (p1score == 3) 
-                p1express.text = "=)"; 
-            else if (p1score == 2) 
-                p1express.text = "=/"; 
-            else if (p1score == 1) 
-                p1express.text = "=("; 
-            else if (p1score <= 0) 
-                p1express.text = "X("; 
-            else if (p1score >= 4) 
-                p1express.text = "=D"; 
-        if (p1face == "Brack") 
-            if (p1score == 3) 
-                p1express.text = "=]"; 
-            else if (p1score == 2) 
-                p1express.text = "=/"; 
-            else if (p1score == 1) 
-                p1express.text = "=["; 
-            else if (p1score <= 0) 
-                p1express.text = "X["; 
-            else if (p1score >= 4) 
-                p1express.text = "=[]"; 
-        if (p1face == "Curly") 
-            if (p1score == 3) 
-                p1express.text = "=}"; 
-            else if (p1score == 2) 
-                p1express.text = "=/"; 
-            else if (p1score == 1) 
-                p1express.text = "={"; 
-            else if (p1score <= 0) 
-                p1express.text = "X{"; 
-            else if (p1score >= 4) 
-                p1express.text = "={}"; 
-         if (p2face == "Miles") 
-            if (p2score == 3) 
-                p2express.text = "=)"; 
-            else if (p2score == 2) 
-                p2express.text = "=/"; 
-            else if (p2score == 1) 
-                p2express.text = "=("; 
-            else if (p2score <= 0) 
-                p2express.text = "X("; 
-            else if (p2score >= 4) 
-                p2express.text = "=D"; 
-        if (p2face == "Brack") 
-            if (p2score == 3) 
-                p2express.text = "=]"; 
-            else if (p2score == 2) 
-                p2express.text = "=/"; 
-            else if (p2score == 1) 
-                p2express.text = "=["; 
-            else if (p2score <= 0) 
-                p2express.text = "X["; 
-            else if (p2score >= 4) 
-                p2express.text = "=[]"; 
-        if (p2face == "Curly") 
-            if (p2score == 3) 
-                p2express.text = "=}"; 
-            else if (p2score == 2) 
-                p2express.text = "=/"; 
-            else if (p2score == 1) 
-                p2express.text = "={"; 
-            else if (p2score <= 0) 
-                p2express.text = "X{"; 
-            else if (p2score >= 4) 
-                p2express.text = "={}"; 
-    } 
-
+    
     public IEnumerator centBong() 
     {
         yield return new WaitForSeconds(1); 
@@ -143,7 +75,7 @@ public class Gamemanager : MonoBehaviour
         p1score = 3; 
         p2score = 3; 
 
-        UpdateScore(); 
+        screenManager.UpdateScore(p1score, p1face, p2score, p2face); 
 
         GameObject leftWall= GameObject.FindGameObjectWithTag("P2S");
         GameObject rightWall = GameObject.FindGameObjectWithTag("P1S");
