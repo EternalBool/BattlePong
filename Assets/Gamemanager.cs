@@ -12,10 +12,14 @@ public class Gamemanager : MonoBehaviour
     public int p2score = 3; 
     public bool gameProg = false; 
     public string p1face = "Miles";
-    public string p2face = "Brack";
+    public string p2face = "Botto";
 
     public BongBall bongBall; // Reference to BongBall script
-    public ScreenManager screenManager; // Reference to ScreenManager script 
+    public ScreenManager screenManager; // Reference to ScreenManager script
+    public GameObject bong;
+    public GameObject p1;
+    public GameObject p2;
+
     public TextMeshProUGUI scoreText; 
     public TextMeshProUGUI p1express; 
     public TextMeshProUGUI p2express; 
@@ -23,13 +27,15 @@ public class Gamemanager : MonoBehaviour
     public void PlayerScored(string player) 
     {    
         if (player == "p1") 
-        { 
-            p2score--; 
+        {
+            p2score--;
+            p2.GetComponent<Pad2>().Regress(p2face);
             Debug.Log("Player 1 Scored! Player 1: " + p1score + " Player 2: " + p2score); 
         } 
         else if (player == "p2") 
-        { 
-            p1score--; 
+        {
+            p1score--;
+            p1.GetComponent<Pad1>().Regress(p1face);
             Debug.Log("Player 2 Scored! Player 1: " + p1score + " Player 2: " + p2score); 
         } 
         screenManager.UpdateScore(p1score, p1face, p2score, p2face); 
@@ -43,7 +49,6 @@ public class Gamemanager : MonoBehaviour
     {
         yield return new WaitForSeconds(1); 
 
-        GameObject bong = GameObject.FindGameObjectWithTag("Bong"); 
         bong.transform.position = Vector2.zero; 
 
         Rigidbody2D rb = bong.GetComponent<Rigidbody2D>(); 

@@ -7,6 +7,8 @@ TagManager:
   - P2S
   - P1S
   - Bong
+  - Paddle1
+  - Paddle2
   layers:
   - Default
   - TransparentFX

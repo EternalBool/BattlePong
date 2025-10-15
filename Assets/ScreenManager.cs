@@ -8,6 +8,7 @@ using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Unity.Collections;
+using UnityEngine.InputSystem; 
 public class ScreenManager : MonoBehaviour 
 { 
     public Canvas canvas; 
@@ -64,6 +65,14 @@ public class ScreenManager : MonoBehaviour
                 {2, "=/" },
                 {3, "=}" },
                 {4, "={}" }
+            },
+            ["Botto"] = new Dictionary<int, string>
+            {
+                {0, "X()" },
+                {1, "B)" },
+                {2, "B/" },
+                {3, "B)" },
+                {4, "B()" }
             },
         };
     }
@@ -207,8 +216,14 @@ public class ScreenManager : MonoBehaviour
     } 
     public void OverGame() 
     { 
-        gameManager.p1score = 3; 
+        gameManager.p1score = 3;
         gameManager.p2score = 3;
+        GameObject pad1 = GameObject.FindGameObjectWithTag("Paddle1");
+        GameObject pad2 = GameObject.FindGameObjectWithTag("Paddle2");
+        Vector3 scale1 = pad1.transform.localScale;
+        Vector3 scale2 = pad2.transform.localScale;
+        scale1.y = 3f;
+        scale2.y = 3f;
         gameManager.gameProg = true;
         StartCoroutine(Flex("Out"));
         UpdateScore(gameManager.p1score, gameManager.p1face, gameManager.p2score, gameManager.p2face); 
@@ -222,17 +237,25 @@ public class ScreenManager : MonoBehaviour
     void Start()
     { 
         GameObject resetButton = GamePanel.transform.Find("Reset").gameObject; 
-        Button btn = resetButton.GetComponent<Button>(); 
-        btn.onClick.AddListener(OverGame); 
+        Button btn = resetButton.GetComponent<Button>();
+        btn.onClick.AddListener(OverGame);
     } 
     void Update() 
-    { 
-        if (!gameManager.gameProg) 
-        { 
-            if (!endGame) 
+    {
+        if (!gameManager.gameProg)
+        {
+            if (!endGame)
             {
-                GameOver(); 
-            } 
-        } 
+                GameOver();
+            }
+        }
+        var keyboard = Keyboard.current;
+        if (keyboard != null && gameManager != null && !gameManager.gameProg)
+        {
+            if (keyboard.rKey.wasPressedThisFrame)
+            {
+                OverGame();
+            }
+        }
     } 
 } 

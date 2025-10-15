@@ -1,30 +1,59 @@
+using System.Collections.Specialized;
 using JetBrains.Annotations;
 using Unity.Mathematics;
-using UnityEngine; 
+using UnityEngine;
 
- public class BongBall : MonoBehaviour
+public class BongBall : MonoBehaviour
 {
     public GameObject bong;
     public GameObject p1;
     public GameObject p2;
-    public Rigidbody2D rb; 
-    public float xVel; 
-    public float yVel; 
+    public Rigidbody2D rb;
+    public float xVel;
+    public float yVel;
     public float sped;
-    public float yMult = 0f;
+    public float yMult = 2f;
     public float maxVel;
-    public Gamemanager gameManager; // Reference to GameManager script 
 
-    void OnTriggerEnter2D(Collider2D other) 
-    { 
-        if (other.CompareTag("P2S")) 
-        { 
-            gameManager.PlayerScored("p2"); 
-        } 
-        else if (other.CompareTag("P1S")) 
-        { 
-            gameManager.PlayerScored("p1"); 
-        } 
+    //public float spinSped = 5f; //EXPERIMENT
+    //private float currSpin; //EXPERIMENT
+    public Gamemanager gameManager;
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("P2S"))
+        {
+            gameManager.PlayerScored("p2");
+        }
+        else if (other.CompareTag("P1S"))
+        {
+            gameManager.PlayerScored("p1");
+        }
+    }
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Paddle1") || collision.gameObject.CompareTag("Paddle1"))
+        {
+            Vector2 v = rb.linearVelocity;
+            float padVelY = 0f;
+            if (collision.gameObject == p1)
+            {
+                var pad = collision.gameObject.GetComponent<Pad1>();
+                if (pad != null) padVelY = pad.vertVel;
+            }
+            else if (collision.gameObject == p2)
+            {
+                var pad = collision.gameObject.GetComponent<Pad2>();
+                if (pad != null) padVelY = pad.vertVel;
+            }
+
+            v.y += padVelY * 0.15f;
+            //currSpin = padVelY * 10f;
+            v.y = Mathf.Clamp(v.y, -maxVel, maxVel);
+            float xDir = Mathf.Sign(v.x);
+            v.x = xDir * Mathf.Abs(rb.linearVelocity.x);
+            rb.linearVelocity = v;
+        }
     }
     public void startVel()
     {
@@ -37,7 +66,7 @@ using UnityEngine;
             xVel = 1f;
         }
 
-        yVel = UnityEngine.Random.Range(-(yMult), (yMult));
+        yVel = UnityEngine.Random.Range(-(yMult + 1.5f), (yMult + 1.5f));
         rb.linearVelocity = new Vector2(xVel * sped, yVel * yMult);
 
         Debug.Log($"GameManager = {gameManager}, gameProg = {gameManager?.gameProg}");
@@ -90,5 +119,17 @@ using UnityEngine;
             rb.linearVelocityX = rb.linearVelocityX > 0 ? maxVel : -maxVel;
             maxBounce(true);
         }
+
+        /*
+        // *** EXIRIMENTO *** // *** EXIRIMENTO *** // *** EXIRIMENTO *** // *** EXIRIMENTO *** // *** EXIRIMENTO *** //
+        if (Mathf.Abs(currSpin) > 0.01f)
+        {
+            // Rotate the sprite only (visual effect)
+            transform.Rotate(Vector3.forward, currSpin * spinSped * Time.deltaTime * Mathf.Sign(rb.linearVelocity.x));
+
+            // Optional: slowly reduce spin over time (spin decay)
+            currSpin = Mathf.Lerp(currSpin, 0f, Time.deltaTime * 2f);
+        }
+        */
     } 
 } 
