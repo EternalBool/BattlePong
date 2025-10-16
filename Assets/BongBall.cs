@@ -14,6 +14,7 @@ public class BongBall : MonoBehaviour
     public float sped;
     public float yMult = 2f;
     public float maxVel;
+    public bool maxBouncyBool = false;
 
     //public float spinSped = 5f; //EXPERIMENT
     //private float currSpin; //EXPERIMENT
@@ -76,14 +77,16 @@ public class BongBall : MonoBehaviour
     {
         PhysicsMaterial2D poneMat = p1.GetComponent<Collider2D>().sharedMaterial;
         PhysicsMaterial2D pwoMat = p2.GetComponent<Collider2D>().sharedMaterial;
-        if (set == false)
+        if (!set)
         {
+            maxBouncyBool = false;
             Debug.Log("+Velocity");
             poneMat.bounciness = 1.05f;
             pwoMat.bounciness = 1.05f;
         }
         else
         {
+            maxBouncyBool = true;
             poneMat.bounciness = 1f;
             pwoMat.bounciness = 1f;
         }        
@@ -118,6 +121,13 @@ public class BongBall : MonoBehaviour
             Debug.Log("MAX BOUNCINESS");
             rb.linearVelocityX = rb.linearVelocityX > 0 ? maxVel : -maxVel;
             maxBounce(true);
+        }
+        if (gameManager.gameProg && maxBouncyBool)
+        {
+            if (rb.linearVelocity.magnitude < maxVel)
+            {
+                maxBounce(false);
+            }
         }
 
         /*

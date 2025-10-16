@@ -1,58 +1,63 @@
 using UnityEngine;
+using System.Collections;
 
-public class BallTrail : MonoBehaviour
+public class BallGhostTrail : MonoBehaviour
 {
-    public GameObject trailSquarePrefab;
-    public int squareCount = 3;
-    public float distanceBetween = 0.3f;
-    public float shrinkFactor = 0.8f;
-    public float fadeFactor = 0.5f;
-    public float velocityThreshold = 10f; // 👈 Only emit above this speed
+    public GameObject ghostPrefab;      // assign your faded ghost prefab
+    public float spawnInterval = 0.05f; // how often to spawn ghosts
+    public float ghostLifetime = 0.4f;  // how long ghosts last before fading
+    public float fadeSpeed = 2f;        // how fast ghosts fade
+    public float minVelocity = 10f;     // minimum velocity required to spawn ghosts
 
-    private Transform[] squares;
-    private Rigidbody2D rb;
-    private bool emitting = false; // 👈 toggle for emission
+    private float timer = 0f;
+    private Rigidbody2D rb2d;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-
-        // Create trail squares as children
-        squares = new Transform[squareCount];
-        for (int i = 0; i < squareCount; i++)
-        {
-            GameObject sq = Instantiate(trailSquarePrefab, transform.position, Quaternion.identity, transform);
-            squares[i] = sq.transform;
-            sq.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0); // start invisible
-        }
+        rb2d = GetComponent<Rigidbody2D>();
+        if (rb2d == null)
+            Debug.LogWarning("BallGhostTrail: No Rigidbody2D found on this object!");
     }
 
     void Update()
     {
-        // 👇 check velocity to toggle emission
-        float speed = rb.linearVelocity.magnitude;
-        emitting = speed > velocityThreshold;
-
-        for (int i = 0; i < squareCount; i++)
+        // Only emit ghosts if moving fast enough in any direction
+        if (rb2d != null && rb2d.linearVelocity.magnitude > minVelocity)
         {
-            Transform sq = squares[i];
-            SpriteRenderer sr = sq.GetComponent<SpriteRenderer>();
-
-            // desired position behind the ball
-            Vector3 targetPos = transform.position - (Vector3)rb.linearVelocity.normalized * distanceBetween * (i + 1);
-
-            // smooth follow
-            sq.position = Vector3.Lerp(sq.position, targetPos, Time.deltaTime * 8f);
-
-            // scale down each subsequent square
-            float scale = Mathf.Pow(shrinkFactor, i + 1);
-            sq.localScale = Vector3.Lerp(sq.localScale, Vector3.one * scale, Time.deltaTime * 8f);
-
-            // fade based on emission state and order
-            float targetAlpha = emitting ? Mathf.Pow(fadeFactor, i + 1) : 0f;
-            Color c = sr.color;
-            c.a = Mathf.Lerp(c.a, targetAlpha, Time.deltaTime * 6f);
-            sr.color = c;
+            timer += Time.deltaTime;
+            if (timer >= spawnInterval)
+            {
+                SpawnGhost();
+                timer = 0f;
+            }
         }
+    }
+
+    void SpawnGhost()
+    {
+        GameObject ghost = Instantiate(ghostPrefab, transform.position, transform.rotation);
+        SpriteRenderer sr = ghost.GetComponent<SpriteRenderer>();
+        if (sr != null)
+            StartCoroutine(FadeAndShrink(ghost, sr));
+    }
+
+    private IEnumerator FadeAndShrink(GameObject ghost, SpriteRenderer sr)
+    {
+        float elapsed = 0f;
+        Color startColor = sr.color;
+        Vector3 startScale = ghost.transform.localScale;
+
+        while (elapsed < ghostLifetime)
+        {
+            elapsed += Time.deltaTime * fadeSpeed;
+            float t = elapsed / ghostLifetime;
+
+            sr.color = new Color(startColor.r, startColor.g, startColor.b, 1 - t);
+            ghost.transform.localScale = Vector3.Lerp(startScale, Vector3.zero, t);
+
+            yield return null;
+        }
+
+        Destroy(ghost);
     }
 }

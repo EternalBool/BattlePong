@@ -405,7 +405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdf8dbdd2a152ff44aede4234bc89ba8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pad2
-  padSped: 10
+  padSped: 15
   padPos: {x: 8, y: 0, z: 0}
   gameManager: {fileID: 505523553}
   vertVel: 0
@@ -696,7 +696,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a376f3e01c07884f8a5f59dfe6e27ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pad1
-  padSped: 10
+  padSped: 15
   padPos: {x: -8, y: 0, z: 0}
   gameManager: {fileID: 505523553}
   vertVel: 0
@@ -1745,7 +1745,7 @@ Transform:
   m_GameObject: {fileID: 879864766}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -6.8, z: 0}
+  m_LocalPosition: {x: 0, y: -7, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2577,12 +2577,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e46d02c39d934b4db660e89d67fa62a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BallTrail
-  trailSquarePrefab: {fileID: 879864766}
-  squareCount: 3
-  distanceBetween: 0.3
-  shrinkFactor: 0.8
-  fadeFactor: 0.5
-  velocityThreshold: 15
+  ghostPrefab: {fileID: 879864766}
+  spawnInterval: 0.05
+  ghostLifetime: 0.4
+  fadeSpeed: 2
+  minVelocity: 10
 --- !u!1 &1669702500
 GameObject:
   m_ObjectHideFlags: 0
@@ -2618,8 +2617,11 @@ MonoBehaviour:
   canvas: {fileID: 1669702504}
   gameManager: {fileID: 505523553}
   GamePanel: {fileID: 1353892515}
+  p1: {fileID: 273779350}
+  p2: {fileID: 182385710}
   p1express: {fileID: 204588106}
   p2express: {fileID: 791402442}
+  Scale: {x: 0, y: 0, z: 0}
 --- !u!114 &1669702502
 MonoBehaviour:
   m_ObjectHideFlags: 0
