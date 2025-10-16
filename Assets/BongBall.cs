@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Specialized;
 using JetBrains.Annotations;
 using Unity.Mathematics;
@@ -14,6 +15,7 @@ public class BongBall : MonoBehaviour
     public float sped;
     public float yMult = 2f;
     public float maxVel;
+    public float minYVel = 1.5f;
     public bool maxBouncyBool = false;
 
     //public float spinSped = 5f; //EXPERIMENT
@@ -49,10 +51,20 @@ public class BongBall : MonoBehaviour
             }
 
             v.y += padVelY * 0.15f;
-            //currSpin = padVelY * 10f;
             v.y = Mathf.Clamp(v.y, -maxVel, maxVel);
             float xDir = Mathf.Sign(v.x);
             v.x = xDir * Mathf.Abs(rb.linearVelocity.x);
+            rb.linearVelocity = v;
+        }
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            Vector2 v = rb.linearVelocity;
+            if (Mathf.Abs(v.y) < minYVel)
+            {
+                float sign = Mathf.Sign(v.y);
+                if (sign == 0) sign = 1f;
+                v.y = sign * minYVel;
+            }
             rb.linearVelocity = v;
         }
     }
