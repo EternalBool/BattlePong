@@ -8,19 +8,30 @@ using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Unity.Collections;
-using UnityEngine.InputSystem; 
+using UnityEngine.InputSystem;
+using System.IO.Compression;
+using UnityEditor.U2D.Animation;
+public class CharacterData
+{
+    public Vector3 Scale;
+    public Dictionary<int, string> Expressions;
+}
 public class ScreenManager : MonoBehaviour 
 { 
     public Canvas canvas; 
     public Gamemanager gameManager;
     public GameObject GamePanel;
+    public GameObject p1;
+    public GameObject p2;
     public TextMeshProUGUI p1express;
     public TextMeshProUGUI p2express;
     private bool endGame = false; 
     private float delay = 0.1f;
     private string GOTxt = "Game Over luh bruh";
+    public Vector3 Scale;
+    public Dictionary<int, string> Expressions;
 
-    private Dictionary<string, Dictionary<int, string>> expressions;
+    private Dictionary<string, CharacterData> charData = new Dictionary<string, CharacterData>();
     private Dictionary<int, Dictionary<string, object>> pExpress;
 
     void Awake()
@@ -29,58 +40,61 @@ public class ScreenManager : MonoBehaviour
         {
             [1] = new Dictionary<string, object>
             {
-                {"Express", p1express },
-                {"WinText", "P1 Wins!!!"},
-                {"LossText", "P1 Loss..."},
+                { "Express", p1express },
+                { "WinText", "P1 Wins!!!" },
+                { "LossText", "P1 Loss..." },
             },
             [2] = new Dictionary<string, object>
             {
-                {"Express", p2express },
-                {"WinText", "P2 Wins!!!"},
-                {"LossText", "P2 Loss..."},
+                { "Express", p2express },
+                { "WinText", "P2 Wins!!!" },
+                { "LossText", "P2 Loss..." },
             },
         };
-        expressions = new Dictionary<string, Dictionary<int, string>>
+
+
+        charData = new Dictionary<string, CharacterData>
         {
-            ["Miles"] = new Dictionary<int, string>
+            ["Miles"] = new CharacterData
             {
-                {0, "X(" },
-                {1, "=(" },
-                {2, "=/" },
-                {3, "=)" },
-                {4, "=D" }
+                Scale = new Vector3(0.5f, 3f, 0.5f),
+                Expressions = new Dictionary<int, string>
+                {
+                    { 0, "X(" }, { 1, "=(" }, { 2, "=/" }, { 3, "=)" }, { 4, "=D" }
+                }
             },
-            ["Brack"] = new Dictionary<int, string>
+            ["Brack"] = new CharacterData
             {
-                {0, "X[" },
-                {1, "=[" },
-                {2, "=/" },
-                {3, "=]" },
-                {4, "=[]" }
+                Scale = new Vector3(0.75f, 4f, 0.75f),
+                Expressions = new Dictionary<int, string>
+                {
+                    { 0, "X[" }, { 1, "=[" }, { 2, "=/" }, { 3, "=]" }, { 4, "=[]" }
+                }
             },
-            ["Curly"] = new Dictionary<int, string>
+            ["Curly"] = new CharacterData
             {
-                {0, "X{" },
-                {1, "={" },
-                {2, "=/" },
-                {3, "=}" },
-                {4, "={}" }
+                Scale = new Vector3(0.35f, 2f, 0.35f),
+                Expressions = new Dictionary<int, string>
+                {
+                    { 0, "X{" }, { 1, "={" }, { 2, "=/" }, { 3, "=}" }, { 4, "={}" }
+                }
             },
-            ["Botto"] = new Dictionary<int, string>
+            ["Botto"] = new CharacterData
             {
-                {0, "X()" },
-                {1, "B)" },
-                {2, "B/" },
-                {3, "B)" },
-                {4, "B()" }
-            },
+                Scale = new Vector3(0.5f, 3, 0.5f),
+                Expressions = new Dictionary<int, string>
+                {
+                    { 0, "X()" }, { 1, "B(" }, { 2, "B/" }, { 3, "B)" }, { 4, "B()" }
+                }
+            }
         };
     }
 
+
     public void UpdateScore(int poneScore, string poneFace, int pwoScore, string pwoFace)
     {
-        p1express.text = expressions[poneFace][poneScore];
-        p2express.text = expressions[pwoFace][pwoScore];
+        p1express.text = charData[poneFace].Expressions[poneScore];
+        p2express.text = charData[pwoFace].Expressions[pwoScore]; 
     }
     private IEnumerator TypeText(bool set) 
     { 
@@ -218,12 +232,8 @@ public class ScreenManager : MonoBehaviour
     { 
         gameManager.p1score = 3;
         gameManager.p2score = 3;
-        GameObject pad1 = GameObject.FindGameObjectWithTag("Paddle1");
-        GameObject pad2 = GameObject.FindGameObjectWithTag("Paddle2");
-        Vector3 scale1 = pad1.transform.localScale;
-        Vector3 scale2 = pad2.transform.localScale;
-        scale1.y = 3f;
-        scale2.y = 3f;
+        p1.transform.localScale = charData[gameManager.p1face].Scale;
+        p2.transform.localScale = charData[gameManager.p2face].Scale;
         gameManager.gameProg = true;
         StartCoroutine(Flex("Out"));
         UpdateScore(gameManager.p1score, gameManager.p1face, gameManager.p2score, gameManager.p2face); 
