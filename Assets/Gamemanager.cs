@@ -12,7 +12,9 @@ public class Gamemanager : MonoBehaviour
     public int p2score = 3; 
     public bool gameProg = false; 
     public string p1face = "Miles";
+    public int PB1DIFF = 1;
     public string p2face = "Botto";
+    public int PB2DIFF = 1;
 
     public BongBall bongBall; // Reference to BongBall script
     public ScreenManager screenManager; // Reference to ScreenManager script

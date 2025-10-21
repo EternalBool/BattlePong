@@ -35,7 +35,7 @@ public class BongBall : MonoBehaviour
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Paddle1") || collision.gameObject.CompareTag("Paddle1"))
+        if (collision.gameObject.CompareTag("Paddle1") || collision.gameObject.CompareTag("Paddle2"))
         {
             Vector2 v = rb.linearVelocity;
             float padVelY = 0f;

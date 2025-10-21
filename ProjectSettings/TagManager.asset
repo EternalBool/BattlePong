@@ -9,6 +9,7 @@ TagManager:
   - Bong
   - Paddle1
   - Paddle2
+  - Wall
   layers:
   - Default
   - TransparentFX

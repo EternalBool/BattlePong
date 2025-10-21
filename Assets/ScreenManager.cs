@@ -14,6 +14,7 @@ using UnityEditor.U2D.Animation;
 public class CharacterData
 {
     public Vector3 Scale;
+    public float Speed;
     public Dictionary<int, string> Expressions;
 }
 public class ScreenManager : MonoBehaviour 
@@ -50,6 +51,18 @@ public class ScreenManager : MonoBehaviour
                 { "WinText", "P2 Wins!!!" },
                 { "LossText", "P2 Loss..." },
             },
+            [3] = new Dictionary<string, object>
+            {
+                { "Express", p1express },
+                { "WinText", "Bot Wins!!!" },
+                { "LossText", "Bot Loss..." },
+            },
+            [4] = new Dictionary<string, object>
+            {
+                { "Express", p2express },
+                { "WinText", "Bot Wins!!!" },
+                { "LossText", "Bot Loss..." },
+            },
         };
 
 
@@ -57,6 +70,7 @@ public class ScreenManager : MonoBehaviour
         {
             ["Miles"] = new CharacterData
             {
+                Speed = 15f,
                 Scale = new Vector3(0.5f, 3f, 0.5f),
                 Expressions = new Dictionary<int, string>
                 {
@@ -65,6 +79,7 @@ public class ScreenManager : MonoBehaviour
             },
             ["Brack"] = new CharacterData
             {
+                Speed = 10f,
                 Scale = new Vector3(0.75f, 4f, 0.75f),
                 Expressions = new Dictionary<int, string>
                 {
@@ -73,6 +88,7 @@ public class ScreenManager : MonoBehaviour
             },
             ["Curly"] = new CharacterData
             {
+                Speed = 20f,
                 Scale = new Vector3(0.35f, 2f, 0.35f),
                 Expressions = new Dictionary<int, string>
                 {
@@ -81,6 +97,7 @@ public class ScreenManager : MonoBehaviour
             },
             ["Botto"] = new CharacterData
             {
+                Speed = 15f,
                 Scale = new Vector3(0.5f, 3, 0.5f),
                 Expressions = new Dictionary<int, string>
                 {
@@ -94,7 +111,16 @@ public class ScreenManager : MonoBehaviour
     public void UpdateScore(int poneScore, string poneFace, int pwoScore, string pwoFace)
     {
         p1express.text = charData[poneFace].Expressions[poneScore];
-        p2express.text = charData[pwoFace].Expressions[pwoScore]; 
+        p2express.text = charData[pwoFace].Expressions[pwoScore];
+    }
+    public void Initialize()
+    {
+        gameManager.p1score = 3;
+        gameManager.p2score = 3;
+        p1.GetComponent<Pad1>().padSped = charData[gameManager.p1face].Speed;
+        p2.GetComponent<Pad2>().padSped = charData[gameManager.p2face].Speed;
+        p1.transform.localScale = charData[gameManager.p1face].Scale;
+        p2.transform.localScale = charData[gameManager.p2face].Scale;
     }
     private IEnumerator TypeText(bool set) 
     { 
@@ -162,6 +188,7 @@ public class ScreenManager : MonoBehaviour
         Quaternion endRot = Quaternion.Euler(0,0,-90);
         int winner;
         int loser;
+        int bot = 2;
 
         if (gameManager.p1score == 0) {winner = 2; loser = 1; } else { winner = 1; loser = 2;}
 
@@ -177,14 +204,14 @@ public class ScreenManager : MonoBehaviour
             if (winner == 1)
             {
                 gameManager.p1score = 4;
-                poneRes.text = (string)pExpress[winner]["WinText"];
-                pwoRes.text = (string)pExpress[loser]["LossText"];
+                poneRes.text = gameManager.p1face != "Botto" ? (string)pExpress[winner]["WinText"] : (string)pExpress[winner + bot]["WinText"];
+                pwoRes.text = gameManager.p2face != "Botto" ? (string)pExpress[loser]["LossText"] : (string)pExpress[loser + bot]["LossText"];
             }
             else
             {
                 gameManager.p2score = 4;
-                pwoRes.text = (string)pExpress[winner]["WinText"];
-                poneRes.text = (string)pExpress[loser]["LossText"];
+                pwoRes.text = gameManager.p2face != "Botto" ? (string)pExpress[winner]["WinText"] : (string)pExpress[winner + bot]["WinText"];
+                poneRes.text = gameManager.p1face != "Botto" ? (string)pExpress[loser]["LossText"] : (string)pExpress[loser + bot]["LossText"];
             }
 
             UpdateScore(gameManager.p1score, gameManager.p1face, gameManager.p2score, gameManager.p2face);
@@ -229,11 +256,8 @@ public class ScreenManager : MonoBehaviour
         StartCoroutine(ButtonScroll(true)); 
     } 
     public void OverGame() 
-    { 
-        gameManager.p1score = 3;
-        gameManager.p2score = 3;
-        p1.transform.localScale = charData[gameManager.p1face].Scale;
-        p2.transform.localScale = charData[gameManager.p2face].Scale;
+    {
+        Initialize();
         gameManager.gameProg = true;
         StartCoroutine(Flex("Out"));
         UpdateScore(gameManager.p1score, gameManager.p1face, gameManager.p2score, gameManager.p2face); 
@@ -245,7 +269,8 @@ public class ScreenManager : MonoBehaviour
         StartCoroutine(ButtonScroll(false)); 
     } 
     void Start()
-    { 
+    {
+        Initialize();
         GameObject resetButton = GamePanel.transform.Find("Reset").gameObject; 
         Button btn = resetButton.GetComponent<Button>();
         btn.onClick.AddListener(OverGame);
