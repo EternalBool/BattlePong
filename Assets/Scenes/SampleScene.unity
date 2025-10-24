@@ -407,6 +407,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Pad2
   padSped: 15
   padPos: {x: 8, y: 0, z: 0}
+  bong: {fileID: 1380452715}
   gameManager: {fileID: 505523553}
   vertVel: 0
   lastY: 0
@@ -699,10 +700,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Pad1
   padSped: 15
   padPos: {x: -8, y: 0, z: 0}
+  bong: {fileID: 1380452715}
   gameManager: {fileID: 505523553}
   vertVel: 0
   pc: 0
-  botDateRate: 1
 --- !u!1 &289499777
 GameObject:
   m_ObjectHideFlags: 0
@@ -1161,7 +1162,9 @@ MonoBehaviour:
   p2score: 3
   gameProg: 0
   p1face: Miles
+  PB1DIFF: 2
   p2face: Botto
+  PB2DIFF: 2
   bongBall: {fileID: 1380452720}
   screenManager: {fileID: 1669702501}
   bong: {fileID: 1380452715}

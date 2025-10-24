@@ -11,6 +11,7 @@ public class Pad2 : MonoBehaviour
     public float lastY;
     public bool pc;
     private float botDateRate = 1f;
+    private float viewDist = 4f;
     private float t;
 
     public void Regress(string face)
@@ -78,7 +79,7 @@ public class Pad2 : MonoBehaviour
             if (bong != null && gameManager.gameProg)
             {
                 t += Time.deltaTime;
-                if (t >= botDateRate && bong.transform.position.x >= 0)
+                if (t >= botDateRate && bong.transform.position.x >= -viewDist)
                 {
                     StartCoroutine(BallerP(bound));
                     t = 0f;

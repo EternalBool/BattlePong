@@ -82,7 +82,7 @@ public class Pad1 : MonoBehaviour
             if (bong != null && gameManager.gameProg)
             {
                 t += Time.deltaTime;
-                if (t >= botDateRate && bong.transform.position.x <= 0)
+                if (t >= botDateRate && bong.transform.position.x <= 4)
                 {
                     StartCoroutine(BallerP(bound));
                     t = 0f;

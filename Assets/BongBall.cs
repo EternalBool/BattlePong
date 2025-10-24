@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Specialized;
 using JetBrains.Annotations;
 using Unity.Mathematics;
@@ -10,6 +11,7 @@ public class BongBall : MonoBehaviour
     public GameObject p1;
     public GameObject p2;
     public Rigidbody2D rb;
+    public BallGhostTrail bongTrail;
     public float xVel;
     public float yVel;
     public float sped;
@@ -49,7 +51,13 @@ public class BongBall : MonoBehaviour
                 var pad = collision.gameObject.GetComponent<Pad2>();
                 if (pad != null) padVelY = pad.vertVel;
             }
-
+            Debug.Log("padVelY: " + padVelY);
+            if (Math.Abs(padVelY) > 0)
+            {
+                bongTrail.velMode = "Spin";
+                Debug.Log("velMode: " + bongTrail.velMode);
+                StartCoroutine(Spin(0.5f, padVelY));
+            }
             v.y += padVelY * 0.15f;
             v.y = Mathf.Clamp(v.y, -maxVel, maxVel);
             float xDir = Mathf.Sign(v.x);
@@ -101,8 +109,29 @@ public class BongBall : MonoBehaviour
             maxBouncyBool = true;
             poneMat.bounciness = 1f;
             pwoMat.bounciness = 1f;
-        }        
+        }
 
+    }
+    private IEnumerator Spin(float duration, float padVelY)
+    {
+        float spins = 3f;
+        float elapsed = 0f;
+        float totalDegrees = spins * 360f * Math.Sign(padVelY);
+
+        Quaternion startRot = transform.localRotation;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            float currentAngle = Mathf.Lerp(0f, totalDegrees, t);
+            transform.localRotation = startRot * Quaternion.Euler(0f, 0f, currentAngle);
+            yield return null;
+        }
+        //yield return new WaitForSeconds(0.5f);
+        bongTrail.velMode = "Roaming";
+        Debug.Log("velMode: " + bongTrail.velMode);
+        transform.localRotation = startRot;
     }
 
     public void halt() 
@@ -141,7 +170,6 @@ public class BongBall : MonoBehaviour
                 maxBounce(false);
             }
         }
-
         /*
         // *** EXIRIMENTO *** // *** EXIRIMENTO *** // *** EXIRIMENTO *** // *** EXIRIMENTO *** // *** EXIRIMENTO *** //
         if (Mathf.Abs(currSpin) > 0.01f)
