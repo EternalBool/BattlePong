@@ -1163,7 +1163,7 @@ MonoBehaviour:
   gameProg: 0
   p1face: Miles
   PB1DIFF: 2
-  p2face: Botto
+  p2face: Miles
   PB2DIFF: 2
   bongBall: {fileID: 1380452720}
   screenManager: {fileID: 1669702501}
@@ -2565,6 +2565,7 @@ MonoBehaviour:
   p1: {fileID: 273779350}
   p2: {fileID: 182385710}
   rb: {fileID: 1380452717}
+  bongTrail: {fileID: 1380452722}
   xVel: 1
   yVel: 1
   sped: 15
@@ -2586,10 +2587,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BallTrail
   ghostPrefab: {fileID: 879864766}
+  bongBall: {fileID: 1380452720}
   spawnInterval: 0.05
   ghostLifetime: 0.4
   fadeSpeed: 2
   minVelocity: 15
+  velMode: Roaming
 --- !u!1 &1669702500
 GameObject:
   m_ObjectHideFlags: 0
