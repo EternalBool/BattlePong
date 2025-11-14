@@ -51,7 +51,6 @@ public class BongBall : MonoBehaviour
                 var pad = collision.gameObject.GetComponent<Pad2>();
                 if (pad != null) padVelY = pad.vertVel;
             }
-            Debug.Log("padVelY: " + padVelY);
             if (Math.Abs(padVelY) > 0)
             {
                 bongTrail.velMode = "Spin";

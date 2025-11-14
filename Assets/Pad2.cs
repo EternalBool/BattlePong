@@ -11,7 +11,7 @@ public class Pad2 : MonoBehaviour
     public float lastY;
     public bool pc;
     private float botDateRate = 1f;
-    private float viewDist = 4f;
+    private float viewDist = 0f;
     private float t;
 
     public void Regress(string face)
@@ -28,11 +28,6 @@ public class Pad2 : MonoBehaviour
         }
     }
     // /* *** AI CONFIG *** // *** AI CONFIG *** // *** AI CONFIG *** //
-    void Awake()
-    {
-        pc = gameManager.p2face == "Botto" ? false : true;
-    }
-    // */
     void Start()
     {
         lastY = transform.position.y;
@@ -41,6 +36,7 @@ public class Pad2 : MonoBehaviour
     // Update is called once per frame 
     void Update()
     {
+        pc = gameManager.p2face == "Botto" ? false : true;
         float bound = 4.35f - (transform.localScale.y / 2);
         if (pc)
         {

@@ -4,10 +4,8 @@ using UnityEditor.MPE;
 using UnityEngine; 
 using UnityEngine.InputSystem; 
 public class Pad1 : MonoBehaviour 
-
 {
     public float padSped = 15;
-
     public Vector3 padPos = new Vector3(-8, 0, 0);
     public GameObject bong;
     public Gamemanager gameManager;
@@ -15,6 +13,7 @@ public class Pad1 : MonoBehaviour
     public float vertVel;
     public bool pc;
     private float botDateRate = 1f;
+    private float viewDist = 0f;
     private float t;
 
     public void Regress(string face)
@@ -31,11 +30,6 @@ public class Pad1 : MonoBehaviour
         }
     }
     // /* *** AI CONFIG *** // *** AI CONFIG *** // *** AI CONFIG *** //
-    void Awake()
-    {
-        pc = gameManager.p1face == "Botto" ? false : true;
-    }
-    // */
     void Start() 
     {
         lastY = transform.position.y;
@@ -44,6 +38,7 @@ public class Pad1 : MonoBehaviour
 
     void Update()
     {
+        pc = gameManager.p1face == "Botto" ? false : true;
         float bound = 4.35f - (transform.localScale.y / 2);
         if (pc)
         {
@@ -78,11 +73,10 @@ public class Pad1 : MonoBehaviour
         }
         else
         {
-            
             if (bong != null && gameManager.gameProg)
             {
                 t += Time.deltaTime;
-                if (t >= botDateRate && bong.transform.position.x <= 4)
+                if (t >= botDateRate && bong.transform.position.x <= viewDist)
                 {
                     StartCoroutine(BallerP(bound));
                     t = 0f;

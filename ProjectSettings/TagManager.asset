@@ -10,6 +10,8 @@ TagManager:
   - Paddle1
   - Paddle2
   - Wall
+  - P2PF
+  - P1PF
   layers:
   - Default
   - TransparentFX
