@@ -1829,9 +1829,9 @@ MonoBehaviour:
   gameProg: 0
   playSel: 0
   _p1face: 
-  PB1DIFF: 2
+  PB1DIFF: 1
   _p2face: 
-  PB2DIFF: 2
+  PB2DIFF: 1
   bongBall: {fileID: 1380452720}
   screenManager: {fileID: 1669702501}
   bong: {fileID: 1380452715}
