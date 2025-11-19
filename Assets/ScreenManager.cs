@@ -18,6 +18,7 @@ using NUnit.Framework;
 using UnityEngine.PlayerLoop;
 using UnityEditor.Rendering;
 using Unity.Burst.Intrinsics;
+//using System.Numerics;
 //using UnityEngine.UIElements;
 public class CharacterData
 {
@@ -169,21 +170,21 @@ public class ScreenManager : MonoBehaviour
         TextMeshProUGUI fyfb = IntroPanel.transform.Find("FYFB").GetComponent<TextMeshProUGUI>();
         GameObject space = IntroPanel.transform.Find("SpaceBar").gameObject;
         GameObject vs = IntroPanel.transform.Find("Versus").gameObject;
-        Transform p1p = IntroPanel.transform.Find("P1Panel");
-        Transform p2p = IntroPanel.transform.Find("P2Panel");
+        RectTransform p1p = IntroPanel.transform.Find("P1Panel").GetComponent<RectTransform>();
+        RectTransform p2p = IntroPanel.transform.Find("P2Panel").GetComponent<RectTransform>();
         gameManager.playSel = true;
         StartCoroutine(TextPulse(spacePrompt, null, 15f, 0f, 1f));
         StartCoroutine(Debounce(v => inputBuffer.wasd = v, 3f));
         StartCoroutine(Debounce(v => inputBuffer.ijkl = v, 3f));
         StartCoroutine(Debounce(v => inputBuffer.space = v, 5f));
-        StartCoroutine(Slide(introText.transform, introText.transform.localPosition, new Vector3(0, 1000, 0), 2f, 720f, 1f));
+        StartCoroutine(Slide(introText.GetComponent<RectTransform>(), introText.GetComponent<RectTransform>().anchoredPosition, new Vector2(0, Screen.height + introText.GetComponent<RectTransform>().rect.height), 2f, 720f, 1f));
         StartCoroutine(Fade(IntroPanel, IntroPanel.GetComponent<Image>().color, new Color(1, 1, 1, 1), 1f, 1.5f));
-        StartCoroutine(Slide(p1p.transform, new Vector3(-1000, 0, 0), new Vector3(-200, 0, 0), 1f, 0f, 2f));
-        StartCoroutine(Slide(p2p.transform, new Vector3(1000, 0, 0), new Vector3(200, 0, 0), 1f, 0f, 2f));
+        StartCoroutine(Slide(p1p.GetComponent<RectTransform>(), new Vector2(-Screen.width - p1p.GetComponent<RectTransform>().rect.width, p1p.GetComponent<RectTransform>().anchoredPosition.y), new Vector2(-405, 0), 1f, 0f, 2f));
+        StartCoroutine(Slide(p2p.GetComponent<RectTransform>(), new Vector2(Screen.width + p2p.GetComponent<RectTransform>().rect.width, p2p.GetComponent<RectTransform>().anchoredPosition.y), new Vector2(405, 0), 1f, 0f, 2f));
         StartCoroutine(Fade(vs, vs.GetComponent<TextMeshProUGUI>().color, new Color(vs.GetComponent<TextMeshProUGUI>().color.r, vs.GetComponent<TextMeshProUGUI>().color.g, vs.GetComponent<TextMeshProUGUI>().color.b, 1), 1f, 2f));
         StartCoroutine(TextScroll(IntroPanel.GetComponent<RectTransform>(), fyft, 150f, () => gameManager.playSel == false, true, 3f));
         StartCoroutine(TextScroll(IntroPanel.GetComponent<RectTransform>(), fyfb, 150f, () => gameManager.playSel == false, false, 3f));
-        StartCoroutine(Slide(space.transform, space.transform.localPosition, new Vector3(space.transform.localPosition.x, space.transform.localPosition.y + 200, space.transform.localPosition.z), 3f, -1f, 5f));
+        StartCoroutine(Slide(space.GetComponent<RectTransform>(), space.GetComponent<RectTransform>().anchoredPosition, new Vector2(0f, -282f), 3f, -1f, 5f));
     }
     public void BottoBrain(string player, bool set, int brain)
     {
@@ -191,26 +192,26 @@ public class ScreenManager : MonoBehaviour
         {
             if (player == "P1")
             {
-                Transform pb1p = IntroPanel.transform.Find("PB1Panel");
-                StartCoroutine(Slide(pb1p, new Vector3(-500f, 0f, 0f), new Vector3(-335f, 0f, 0f), 0.5f));
+                RectTransform pb1p = IntroPanel.transform.Find("PB1Panel").GetComponent<RectTransform>();
+                StartCoroutine(Slide(pb1p, new Vector2(-Screen.width - (pb1p.rect.width * 2), 0f), new Vector2(-785f, 0f), 0.5f));
             }
             if (player == "P2")
             {
-                Transform pb2p = IntroPanel.transform.Find("PB2Panel");
-                StartCoroutine(Slide(pb2p, new Vector3(500f, 0f, 0f), new Vector3(335f, 0f, 0f), 0.5f));
+                RectTransform pb2p = IntroPanel.transform.Find("PB2Panel").GetComponent<RectTransform>();
+                StartCoroutine(Slide(pb2p, new Vector2(Screen.width + (pb2p.rect.width * 2), 0f), new Vector2(785f, 0f), 0.5f));
             }
         }
         else
         {
             if (player == "P1")
             {
-                Transform pb1p = IntroPanel.transform.Find("PB1Panel");
-                StartCoroutine(Slide(pb1p, new Vector3(-335f, 0f, 0f), new Vector3(-500f, 0f, 0f), 0.5f));
+                RectTransform pb1p = IntroPanel.transform.Find("PB1Panel").GetComponent<RectTransform>();
+                StartCoroutine(Slide(pb1p, pb1p.anchoredPosition, new Vector2(-Screen.width - (pb1p.rect.width * 2), 0f), 0.5f));
             }
             if (player == "P2")
             {
-                Transform pb2p = IntroPanel.transform.Find("PB2Panel");
-                StartCoroutine(Slide(pb2p, new Vector3(335f, 0f, 0f), new Vector3(500f, 0f, 0f), 0.5f));
+                RectTransform pb2p = IntroPanel.transform.Find("PB2Panel").GetComponent<RectTransform>();
+                StartCoroutine(Slide(pb2p, pb2p.anchoredPosition, new Vector2(Screen.width + (pb2p.rect.width * 2), 0f), 0.5f));
             }
         }
     }
@@ -223,15 +224,15 @@ public class ScreenManager : MonoBehaviour
             p1ps = (p1ps + 4) % 4;
             gameManager.SetSmile(player, charNames[p1ps]);
             TextMeshProUGUI poneFace = GameObject.FindGameObjectWithTag("P1PF").GetComponent<TextMeshProUGUI>();
-            GameObject smileObj = Instantiate(poneFace.gameObject, new Vector2(poneFace.transform.localPosition.x, poneFace.transform.localPosition.y - 200f), poneFace.transform.localRotation);
+            GameObject smileObj = Instantiate(poneFace.gameObject, new Vector2(poneFace.GetComponent<RectTransform>().anchoredPosition.x, poneFace.GetComponent<RectTransform>().anchoredPosition.y - 200f), poneFace.transform.localRotation);
             TextMeshProUGUI nextFace = smileObj.GetComponent<TextMeshProUGUI>();
             smileObj.transform.SetParent(poneFace.transform.parent, false);
             smileObj.name = poneFace.gameObject.name;
             nextFace.text = charData[gameManager.p1face].Expressions[3];
             nextFace.tag = "P1PF";
             nextFace.color = charData[gameManager.p1face].Color;
-            StartCoroutine(Slide(poneFace.transform, poneFace.transform.localPosition, new Vector3(poneFace.transform.localPosition.x, poneFace.transform.localPosition.y + 200f, poneFace.transform.localPosition.z), 0.45f, -1f, -1f, true));
-            StartCoroutine(Slide(nextFace.transform, nextFace.transform.localPosition, new Vector3(nextFace.transform.localPosition.x, nextFace.transform.localPosition.y + 200f, nextFace.transform.localPosition.z), 0.45f));
+            StartCoroutine(Slide(poneFace.GetComponent<RectTransform>(), poneFace.GetComponent<RectTransform>().anchoredPosition, new Vector2(poneFace.GetComponent<RectTransform>().anchoredPosition.x, poneFace.GetComponent<RectTransform>().anchoredPosition.y + 200f), 0.45f, -1f, -1f, true));
+            StartCoroutine(Slide(nextFace.GetComponent<RectTransform>(), nextFace.GetComponent<RectTransform>().anchoredPosition, new Vector2(nextFace.GetComponent<RectTransform>().anchoredPosition.x, nextFace.GetComponent<RectTransform>().anchoredPosition.y + 200f), 0.45f));
         }
         else if (player == "P2")
         {
@@ -239,15 +240,15 @@ public class ScreenManager : MonoBehaviour
             p2ps = (p2ps + 4) % 4;
             gameManager.SetSmile(player, charNames[p2ps]);
             TextMeshProUGUI pwoFace = GameObject.FindGameObjectWithTag("P2PF").GetComponent<TextMeshProUGUI>();
-            GameObject smileObj = Instantiate(pwoFace.gameObject, new Vector2(pwoFace.transform.localPosition.x, pwoFace.transform.localPosition.y - 200f), pwoFace.transform.localRotation);
+            GameObject smileObj = Instantiate(pwoFace.gameObject, new Vector2(pwoFace.GetComponent<RectTransform>().anchoredPosition.x, pwoFace.GetComponent<RectTransform>().anchoredPosition.y - 200f), pwoFace.transform.localRotation);
             TextMeshProUGUI nextFace = smileObj.GetComponent<TextMeshProUGUI>();
             smileObj.transform.SetParent(pwoFace.transform.parent, false);
             smileObj.name = pwoFace.gameObject.name;
             nextFace.text = charData[gameManager.p2face].Expressions[3];
-            StartCoroutine(Slide(pwoFace.transform, pwoFace.transform.localPosition, new Vector3(pwoFace.transform.localPosition.x, pwoFace.transform.localPosition.y + 200f, pwoFace.transform.localPosition.z), 0.45f, -1f, -1f, true));
+            StartCoroutine(Slide(pwoFace.GetComponent<RectTransform>(), pwoFace.GetComponent<RectTransform>().anchoredPosition, new Vector2(pwoFace.GetComponent<RectTransform>().anchoredPosition.x, pwoFace.transform.GetComponent<RectTransform>().anchoredPosition.y + 200f), 0.45f, -1f, -1f, true));
             nextFace.tag = "P2PF";
             nextFace.color = charData[gameManager.p2face].Color;
-            StartCoroutine(Slide(nextFace.transform, nextFace.transform.localPosition, new Vector3(nextFace.transform.localPosition.x, nextFace.transform.localPosition.y + 200f, nextFace.transform.localPosition.z), 0.45f));
+            StartCoroutine(Slide(nextFace.GetComponent<RectTransform>(), nextFace.GetComponent<RectTransform>().anchoredPosition, new Vector2(nextFace.GetComponent<RectTransform>().anchoredPosition.x, nextFace.transform.GetComponent<RectTransform>().anchoredPosition.y + 200f), 0.45f));
         }
     }
     private void FaceDown(string player)
@@ -259,15 +260,15 @@ public class ScreenManager : MonoBehaviour
             p1ps = (p1ps + 4) % 4;
             gameManager.SetSmile(player, charNames[p1ps]);
             TextMeshProUGUI poneFace = GameObject.FindGameObjectWithTag("P1PF").GetComponent<TextMeshProUGUI>();
-            GameObject smileObj = Instantiate(poneFace.gameObject, new Vector2(poneFace.transform.localPosition.x, poneFace.transform.localPosition.y + 200f), poneFace.transform.localRotation);
+            GameObject smileObj = Instantiate(poneFace.gameObject, new Vector2(poneFace.GetComponent<RectTransform>().anchoredPosition.x, poneFace.GetComponent<RectTransform>().anchoredPosition.y + 200f), poneFace.transform.localRotation);
             TextMeshProUGUI nextFace = smileObj.GetComponent<TextMeshProUGUI>();
             smileObj.transform.SetParent(poneFace.transform.parent, false);
             smileObj.name = poneFace.gameObject.name;
             nextFace.text = charData[gameManager.p1face].Expressions[3];
-            StartCoroutine(Slide(poneFace.transform, poneFace.transform.localPosition, new Vector3(poneFace.transform.localPosition.x, poneFace.transform.localPosition.y - 200f, poneFace.transform.localPosition.z), 0.45f, -1f, -1f, true));
+            StartCoroutine(Slide(poneFace.GetComponent<RectTransform>(), poneFace.GetComponent<RectTransform>().anchoredPosition, new Vector2(poneFace.GetComponent<RectTransform>().anchoredPosition.x, poneFace.transform.GetComponent<RectTransform>().anchoredPosition.y - 200f), 0.45f, -1f, -1f, true));
             nextFace.tag = "P1PF";
             nextFace.color = charData[gameManager.p1face].Color;
-            StartCoroutine(Slide(nextFace.transform, nextFace.transform.localPosition, new Vector3(nextFace.transform.localPosition.x, nextFace.transform.localPosition.y - 200f, nextFace.transform.localPosition.z), 0.45f));
+            StartCoroutine(Slide(nextFace.GetComponent<RectTransform>(), nextFace.GetComponent<RectTransform>().anchoredPosition, new Vector2(nextFace.GetComponent<RectTransform>().anchoredPosition.x, nextFace.transform.GetComponent<RectTransform>().anchoredPosition.y - 200f), 0.45f));
         }
         else if (player == "P2")
         {
@@ -275,15 +276,15 @@ public class ScreenManager : MonoBehaviour
             p2ps = (p2ps + 4) % 4;
             gameManager.SetSmile(player, charNames[p2ps]);
             TextMeshProUGUI pwoFace = GameObject.FindGameObjectWithTag("P2PF").GetComponent<TextMeshProUGUI>();
-            GameObject smileObj = Instantiate(pwoFace.gameObject, new Vector2(pwoFace.transform.localPosition.x, pwoFace.transform.localPosition.y + 200f), pwoFace.transform.localRotation);
+            GameObject smileObj = Instantiate(pwoFace.gameObject, new Vector2(pwoFace.GetComponent<RectTransform>().anchoredPosition.x, pwoFace.GetComponent<RectTransform>().anchoredPosition.y + 200f), pwoFace.transform.localRotation);
             TextMeshProUGUI nextFace = smileObj.GetComponent<TextMeshProUGUI>();
             smileObj.transform.SetParent(pwoFace.transform.parent, false);
             smileObj.name = pwoFace.gameObject.name;
             nextFace.text = charData[gameManager.p2face].Expressions[3];
-            StartCoroutine(Slide(pwoFace.transform, pwoFace.transform.localPosition, new Vector3(pwoFace.transform.localPosition.x, pwoFace.transform.localPosition.y - 200f, pwoFace.transform.localPosition.z), 0.45f, -1f, -1f, true));
+            StartCoroutine(Slide(pwoFace.GetComponent<RectTransform>(), pwoFace.GetComponent<RectTransform>().anchoredPosition, new Vector2(pwoFace.GetComponent<RectTransform>().anchoredPosition.x, pwoFace.GetComponent<RectTransform>().anchoredPosition.y - 200f), 0.45f, -1f, -1f, true));
             nextFace.tag = "P2PF";
             nextFace.color = charData[gameManager.p2face].Color;
-            StartCoroutine(Slide(nextFace.transform, nextFace.transform.localPosition, new Vector3(nextFace.transform.localPosition.x, nextFace.transform.localPosition.y - 200f, nextFace.transform.localPosition.z), 0.45f));
+            StartCoroutine(Slide(nextFace.GetComponent<RectTransform>(), nextFace.GetComponent<RectTransform>().anchoredPosition, new Vector2(nextFace.GetComponent<RectTransform>().anchoredPosition.x, nextFace.GetComponent<RectTransform>().anchoredPosition.y - 200f), 0.45f));
         }
     }
     private void FaceSwap(string player, string dir)
@@ -328,8 +329,8 @@ public class ScreenManager : MonoBehaviour
                 GameObject dKey = pb1p.transform.Find("dKey").gameObject;
                 if (gameManager.PB1DIFF < 2)
                 {
-                    StartCoroutine(Slide(aKey.transform, aKey.transform.localPosition, new Vector3(aKey.transform.localPosition.x, aKey.transform.localPosition.y - 20, aKey.transform.localPosition.z), 0.25f));
-                    StartCoroutine(Slide(dKey.transform, dKey.transform.localPosition, new Vector3(dKey.transform.localPosition.x, dKey.transform.localPosition.y - 20, dKey.transform.localPosition.z), 0.25f));
+                    StartCoroutine(Slide(aKey.GetComponent<RectTransform>(), aKey.GetComponent<RectTransform>().anchoredPosition, new Vector2(aKey.GetComponent<RectTransform>().anchoredPosition.x, aKey.GetComponent<RectTransform>().anchoredPosition.y - 20), 0.25f));
+                    StartCoroutine(Slide(dKey.GetComponent<RectTransform>(), dKey.GetComponent<RectTransform>().anchoredPosition, new Vector2(dKey.GetComponent<RectTransform>().anchoredPosition.x, dKey.GetComponent<RectTransform>().anchoredPosition.y - 20), 0.25f));
                     StartCoroutine(Morph(bottonFire.transform, bottonFire.transform.localScale, "Grow", 1.5f, 0.5f));
                 } 
                 gameManager.PB1DIFF++;
@@ -344,8 +345,8 @@ public class ScreenManager : MonoBehaviour
                 GameObject lKey = pb2p.transform.Find("lKey").gameObject;
                 if (gameManager.PB2DIFF < 2)
                 {
-                    StartCoroutine(Slide(jKey.transform, jKey.transform.localPosition, new Vector3(jKey.transform.localPosition.x, jKey.transform.localPosition.y - 20, jKey.transform.localPosition.z), 0.25f));
-                    StartCoroutine(Slide(lKey.transform, lKey.transform.localPosition, new Vector3(lKey.transform.localPosition.x, lKey.transform.localPosition.y - 20, lKey.transform.localPosition.z), 0.25f));
+                    StartCoroutine(Slide(jKey.GetComponent<RectTransform>(), jKey.GetComponent<RectTransform>().anchoredPosition, new Vector2(jKey.GetComponent<RectTransform>().anchoredPosition.x, jKey.GetComponent<RectTransform>().anchoredPosition.y - 20), 0.25f));
+                    StartCoroutine(Slide(lKey.GetComponent<RectTransform>(), lKey.GetComponent<RectTransform>().anchoredPosition, new Vector2(lKey.GetComponent<RectTransform>().anchoredPosition.x, lKey.GetComponent<RectTransform>().anchoredPosition.y - 20), 0.25f));
                     StartCoroutine(Morph(bottonFire.transform, bottonFire.transform.localScale, "Grow", 1.5f, 0.5f));
                 } 
                 gameManager.PB2DIFF++;
@@ -363,8 +364,8 @@ public class ScreenManager : MonoBehaviour
                 GameObject dKey = pb1p.transform.Find("dKey").gameObject;
                 if (gameManager.PB1DIFF > 0)
                 {
-                    StartCoroutine(Slide(aKey.transform, aKey.transform.localPosition, new Vector3(aKey.transform.localPosition.x, aKey.transform.localPosition.y + 20, aKey.transform.localPosition.z), 0.25f));
-                    StartCoroutine(Slide(dKey.transform, dKey.transform.localPosition, new Vector3(dKey.transform.localPosition.x, dKey.transform.localPosition.y + 20, dKey.transform.localPosition.z), 0.25f));
+                    StartCoroutine(Slide(aKey.GetComponent<RectTransform>(), aKey.GetComponent<RectTransform>().anchoredPosition, new Vector2(aKey.GetComponent<RectTransform>().anchoredPosition.x, aKey.GetComponent<RectTransform>().anchoredPosition.y + 20), 0.25f));
+                    StartCoroutine(Slide(dKey.GetComponent<RectTransform>(), dKey.GetComponent<RectTransform>().anchoredPosition, new Vector2(dKey.GetComponent<RectTransform>().anchoredPosition.x, dKey.GetComponent<RectTransform>().anchoredPosition.y + 20), 0.25f));
                     StartCoroutine(Morph(bottonFire.transform, bottonFire.transform.localScale, "Shrink", 1.5f, 0.5f));
                 }
                 gameManager.PB1DIFF--;
@@ -379,8 +380,8 @@ public class ScreenManager : MonoBehaviour
                 GameObject lKey = pb2p.transform.Find("lKey").gameObject;
                 if (gameManager.PB2DIFF > 0)
                 {
-                    StartCoroutine(Slide(jKey.transform, jKey.transform.localPosition, new Vector3(jKey.transform.localPosition.x, jKey.transform.localPosition.y + 20, jKey.transform.localPosition.z), 0.25f));
-                    StartCoroutine(Slide(lKey.transform, lKey.transform.localPosition, new Vector3(lKey.transform.localPosition.x, lKey.transform.localPosition.y + 20, lKey.transform.localPosition.z), 0.25f));
+                    StartCoroutine(Slide(jKey.GetComponent<RectTransform>(), jKey.GetComponent<RectTransform>().anchoredPosition, new Vector2(jKey.GetComponent<RectTransform>().anchoredPosition.x, jKey.GetComponent<RectTransform>().anchoredPosition.y + 20), 0.25f));
+                    StartCoroutine(Slide(lKey.GetComponent<RectTransform>(), lKey.GetComponent<RectTransform>().anchoredPosition, new Vector2(lKey.GetComponent<RectTransform>().anchoredPosition.x, lKey.GetComponent<RectTransform>().anchoredPosition.y + 20), 0.25f));
                     StartCoroutine(Morph(bottonFire.transform, bottonFire.transform.localScale, "Shrink", 1.5f, 0.5f));
                 } 
                 gameManager.PB2DIFF--;
@@ -434,18 +435,18 @@ public class ScreenManager : MonoBehaviour
             }
         }
     }
-    private IEnumerator Morph(Transform morphee, Vector3 size, string transform, float scale, float duration, float wait = -1f)
+    private IEnumerator Morph(Transform morphee, Vector2 size, string transform, float scale, float duration, float wait = -1f)
     {
         if (wait >= 0f) yield return new WaitForSeconds(wait);
         if (transform == "Shrink") scale = (1 / scale);
-        Vector3 target = new Vector3(size.x * scale, size.y * scale, size.z * scale);
+        Vector2 target = new Vector2(size.x * scale, size.y * scale);
         morphee.gameObject.SetActive(true);
         float elapsed = 0f;
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            morphee.localScale = Vector3.Lerp(morphee.localScale, target, elapsed / duration);
+            morphee.localScale = Vector2.Lerp(morphee.localScale, target, elapsed / duration);
             yield return null;
         }
         if (morphee != null) morphee.localScale = target;
@@ -469,7 +470,7 @@ public class ScreenManager : MonoBehaviour
         if (img != null) img.color = goalColor;
         if (tmp != null) tmp.color = goalColor;
     }
-    private IEnumerator Slide(Transform slidee, Vector3 position, Vector3 destination, float duration, float rotation = -1f, float wait = -1f, bool termination = false)
+    private IEnumerator Slide(RectTransform slidee, Vector2 position, Vector2 destination, float duration, float rotation = -1f, float wait = -1f, bool termination = false)
     {
         float elapsed = 0f;
         Quaternion startRot = slidee.localRotation;
@@ -478,7 +479,7 @@ public class ScreenManager : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
-            slidee.localPosition = Vector3.Lerp(position, destination, t);
+            slidee.anchoredPosition = Vector2.Lerp(position, destination, t);
             if (rotation >= 0f)
             {
                 float currentAngle = Mathf.Lerp(0f, rotation, t);
@@ -493,7 +494,7 @@ public class ScreenManager : MonoBehaviour
         GameObject zoomask = panel.transform.parent.gameObject;
         RectTransform zoomRect = zoomask.GetComponent<RectTransform>();
         if (wait >= 0) yield return new WaitForSeconds(wait);
-        Vector2 target = new Vector2(400f, 820f);
+        Vector2 target = new Vector2(0f, 0f);
         float elapsed = 0f;
         while (elapsed < duration)
         {
@@ -556,11 +557,12 @@ public class ScreenManager : MonoBehaviour
     {
         GameObject resetButton = GamePanel.transform.Find("Reset").gameObject;
         Button btn = resetButton.GetComponent<Button>();
+        RectTransform buttpos = btn.GetComponent<RectTransform>();
         if (set == true)
         {
-            Vector3 targetPos = new Vector3(0, -175, 0);
-            Vector3 startPos = new Vector3(0, -1000, 0);
-            resetButton.transform.localPosition = startPos;
+            Vector2 targetPos = new Vector2(0, -443);
+            Vector2 startPos = new Vector2(0, -Screen.height - buttpos.rect.height);
+            buttpos.anchoredPosition = startPos;
             resetButton.SetActive(false);
             float duration = 2f;
             float elapsed = 0f;
@@ -572,7 +574,7 @@ public class ScreenManager : MonoBehaviour
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
-                resetButton.transform.localPosition = Vector3.Lerp(startPos, targetPos, elapsed / duration);
+                resetButton.GetComponent<RectTransform>().anchoredPosition = Vector2.Lerp(startPos, targetPos, elapsed / duration);
                 yield return null;
             }
             resetButton.GetComponent<RectTransform>().anchoredPosition = targetPos;
@@ -580,18 +582,18 @@ public class ScreenManager : MonoBehaviour
         else
         {
             resetButton.SetActive(false);
-            resetButton.transform.localPosition = new Vector3(0, -1000, 0);
+            resetButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1000);
         }
     }
     private IEnumerator Flex(string type)
     {
         TextMeshProUGUI poneRes = GamePanel.transform.Find("P1Res").GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI pwoRes = GamePanel.transform.Find("P2Res").GetComponent<TextMeshProUGUI>();
-        Vector2 ponePlace = new Vector2(-135f, 231f);
-        Vector2 pwoPlace = new Vector2(-26f, 231f);
-        Vector2 poneFlexPos = new Vector2(-450f, 200f);
-        Vector2 pwoFlexPos = new Vector2(-20f, 200f);
-        Vector3 orgScale = new Vector3(1, 1, 1);
+        Vector2 ponePlace = new Vector2(-335f, 595f);
+        Vector2 pwoPlace = new Vector2(-67f, 595f);
+        Vector2 poneFlexPos = new Vector2(-1196f, 519f);
+        Vector2 pwoFlexPos = new Vector2(-1f, 519f);
+        Vector2 orgScale = new Vector2(2.5f, 2.5f);
         float scale = 3f;
         float duration = 4f;
         float elapsed = 0f;
@@ -608,8 +610,8 @@ public class ScreenManager : MonoBehaviour
             p2express.enabled = false;
             p1express.transform.localScale *= scale;
             p2express.transform.localScale *= scale;
-            p1express.transform.localPosition = poneFlexPos;
-            p2express.transform.localPosition = pwoFlexPos;
+            p1express.GetComponent<RectTransform>().anchoredPosition = poneFlexPos;
+            p2express.GetComponent<RectTransform>().anchoredPosition = pwoFlexPos;
 
             if (winner == 1)
             {
@@ -649,8 +651,8 @@ public class ScreenManager : MonoBehaviour
             RectTransform p2sRect = pwoPsSmile.GetComponent<RectTransform>();
             Transform p1p = IntroPanel.transform.Find("P1Panel").transform;
             Transform p2p = IntroPanel.transform.Find("P2Panel").transform;
-            p1express.transform.localPosition = new Vector2(-290.9f, 74f);
-            p2express.transform.localPosition = new Vector2(105.2f, 74f);
+            p1express.GetComponent<RectTransform>().anchoredPosition = new Vector2(-610.9f, 185f);
+            p2express.GetComponent<RectTransform>().anchoredPosition = new Vector2(145.2f, 185f);
             p1eRect.sizeDelta = p1sRect.sizeDelta;
             p2eRect.sizeDelta = p2sRect.sizeDelta;
             p1express.fontSize = ponePsSmile.fontSize;
@@ -664,8 +666,8 @@ public class ScreenManager : MonoBehaviour
             {
                 elapsed += Time.deltaTime;
                 float t = elapsed / duration;
-                p1express.transform.localPosition = Vector3.Lerp(p1express.transform.localPosition, ponePlace, t);
-                p2express.transform.localPosition = Vector3.Lerp(p2express.transform.localPosition, pwoPlace, t);
+                p1express.GetComponent<RectTransform>().anchoredPosition = Vector2.Lerp(p1express.GetComponent<RectTransform>().anchoredPosition, ponePlace, t);
+                p2express.GetComponent<RectTransform>().anchoredPosition = Vector2.Lerp(p2express.GetComponent<RectTransform>().anchoredPosition, pwoPlace, t);
                 p1express.fontSize = Mathf.Lerp(p1express.fontSize, 75f, t);
                 p2express.fontSize = Mathf.Lerp(p2express.fontSize, 75f, t);
                 //float currentAngle = Mathf.Lerp(0f, rotation, t);
@@ -681,12 +683,12 @@ public class ScreenManager : MonoBehaviour
             {
                 elapsed += Time.deltaTime;
                 float t = elapsed / duration;
-                p1express.transform.localScale = Vector3.Lerp(p1express.transform.localScale, orgScale, t);
-                p2express.transform.localScale = Vector3.Lerp(p2express.transform.localScale, orgScale, t);
+                p1express.transform.localScale = Vector2.Lerp(p1express.transform.localScale, orgScale, t);
+                p2express.transform.localScale = Vector2.Lerp(p2express.transform.localScale, orgScale, t);
                 p1express.transform.localRotation = Quaternion.Lerp(p1express.transform.localRotation, endRot, t);
                 p2express.transform.localRotation = Quaternion.Lerp(p2express.transform.localRotation, endRot, t);
-                p1express.transform.localPosition = Vector3.Lerp(p1express.transform.localPosition, ponePlace, t);
-                p2express.transform.localPosition = Vector3.Lerp(p2express.transform.localPosition, pwoPlace, t);
+                p1express.GetComponent<RectTransform>().anchoredPosition = Vector2.Lerp(p1express.GetComponent<RectTransform>().anchoredPosition, ponePlace, t);
+                p2express.GetComponent<RectTransform>().anchoredPosition = Vector2.Lerp(p2express.GetComponent<RectTransform>().anchoredPosition, pwoPlace, t);
                 yield return null;
             }
         }
@@ -696,7 +698,7 @@ public class ScreenManager : MonoBehaviour
         Initialize();
         StartCoroutine(Flex("In"));
         UpdateScore(gameManager.p1score, gameManager.p1face, gameManager.p2score, gameManager.p2face);
-        StartCoroutine(Zoom(IntroPanel.transform, "In", 2f));
+        StartCoroutine(Zoom(IntroPanel.transform, "In", 4f));
         StartCoroutine(gameManager.GameIn());
     }
     public void OverScreen() 
@@ -737,7 +739,10 @@ public class ScreenManager : MonoBehaviour
         {
             if (keyboard.rKey.wasPressedThisFrame)
             {
-                gameManager.OverGame();
+                if (!gameManager.gameInit && !gameManager.playSel && endGame)
+                {
+                    gameManager.OverGame();
+                }
             }
             if (keyboard.spaceKey.wasPressedThisFrame)
             {
