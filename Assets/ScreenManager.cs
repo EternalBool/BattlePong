@@ -170,21 +170,21 @@ public class ScreenManager : MonoBehaviour
         TextMeshProUGUI fyfb = IntroPanel.transform.Find("FYFB").GetComponent<TextMeshProUGUI>();
         GameObject space = IntroPanel.transform.Find("SpaceBar").gameObject;
         GameObject vs = IntroPanel.transform.Find("Versus").gameObject;
-        RectTransform p1p = IntroPanel.transform.Find("P1Panel").GetComponent<RectTransform>();
-        RectTransform p2p = IntroPanel.transform.Find("P2Panel").GetComponent<RectTransform>();
+        Transform p1p = IntroPanel.transform.Find("P1Panel");
+        Transform p2p = IntroPanel.transform.Find("P2Panel");
         gameManager.playSel = true;
         StartCoroutine(TextPulse(spacePrompt, null, 15f, 0f, 1f));
         StartCoroutine(Debounce(v => inputBuffer.wasd = v, 3f));
         StartCoroutine(Debounce(v => inputBuffer.ijkl = v, 3f));
         StartCoroutine(Debounce(v => inputBuffer.space = v, 5f));
-        StartCoroutine(Slide(introText.GetComponent<RectTransform>(), introText.GetComponent<RectTransform>().anchoredPosition, new Vector2(0, Screen.height + introText.GetComponent<RectTransform>().rect.height), 2f, 720f, 1f));
+        StartCoroutine(Slide(introText.transform, introText.transform.localPosition, new Vector3(0, 1000, 0), 2f, 720f, 1f));
         StartCoroutine(Fade(IntroPanel, IntroPanel.GetComponent<Image>().color, new Color(1, 1, 1, 1), 1f, 1.5f));
-        StartCoroutine(Slide(p1p.GetComponent<RectTransform>(), new Vector2(-Screen.width - p1p.GetComponent<RectTransform>().rect.width, p1p.GetComponent<RectTransform>().anchoredPosition.y), new Vector2(-405, 0), 1f, 0f, 2f));
-        StartCoroutine(Slide(p2p.GetComponent<RectTransform>(), new Vector2(Screen.width + p2p.GetComponent<RectTransform>().rect.width, p2p.GetComponent<RectTransform>().anchoredPosition.y), new Vector2(405, 0), 1f, 0f, 2f));
+        StartCoroutine(Slide(p1p.transform, new Vector3(-1000, 0, 0), new Vector3(-200, 0, 0), 1f, 0f, 2f));
+        StartCoroutine(Slide(p2p.transform, new Vector3(1000, 0, 0), new Vector3(200, 0, 0), 1f, 0f, 2f));
         StartCoroutine(Fade(vs, vs.GetComponent<TextMeshProUGUI>().color, new Color(vs.GetComponent<TextMeshProUGUI>().color.r, vs.GetComponent<TextMeshProUGUI>().color.g, vs.GetComponent<TextMeshProUGUI>().color.b, 1), 1f, 2f));
         StartCoroutine(TextScroll(IntroPanel.GetComponent<RectTransform>(), fyft, 150f, () => gameManager.playSel == false, true, 3f));
         StartCoroutine(TextScroll(IntroPanel.GetComponent<RectTransform>(), fyfb, 150f, () => gameManager.playSel == false, false, 3f));
-        StartCoroutine(Slide(space.GetComponent<RectTransform>(), space.GetComponent<RectTransform>().anchoredPosition, new Vector2(0f, -282f), 3f, -1f, 5f));
+        StartCoroutine(Slide(space.transform, space.transform.localPosition, new Vector3(space.transform.localPosition.x, space.transform.localPosition.y + 200, space.transform.localPosition.z), 3f, -1f, 5f));
     }
     public void BottoBrain(string player, bool set, int brain)
     {
@@ -815,4 +815,39 @@ public class ScreenManager : MonoBehaviour
             }
         }
     } 
+    private IEnumerator Morph(Transform morphee, Vector3 size, string transform, float scale, float duration, float wait = -1f)
+    {
+        if (wait >= 0f) yield return new WaitForSeconds(wait);
+        if (transform == "Shrink") scale = (1 / scale);
+        Vector3 target = new Vector3(size.x * scale, size.y * scale, size.z * scale);
+        morphee.gameObject.SetActive(true);
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            morphee.localScale = Vector3.Lerp(morphee.localScale, target, elapsed / duration);
+            yield return null;
+        }
+        if (morphee != null) morphee.localScale = target;
+    }
+    private IEnumerator Slide(Transform slidee, Vector3 position, Vector3 destination, float duration, float rotation = -1f, float wait = -1f, bool termination = false)
+    {
+        float elapsed = 0f;
+        Quaternion startRot = slidee.localRotation;
+        if (wait >= 0f) yield return new WaitForSeconds(wait);
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            slidee.localPosition = Vector3.Lerp(position, destination, t);
+            if (rotation >= 0f)
+            {
+                float currentAngle = Mathf.Lerp(0f, rotation, t);
+                slidee.localRotation = startRot * Quaternion.Euler(0f, 0f, currentAngle);
+            }
+            yield return null;
+        }
+        if (termination) Destroy(slidee.gameObject);
+    }
 } 
