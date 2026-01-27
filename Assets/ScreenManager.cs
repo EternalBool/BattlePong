@@ -815,4 +815,39 @@ public class ScreenManager : MonoBehaviour
             }
         }
     } 
+    private IEnumerator Morph(Transform morphee, Vector3 size, string transform, float scale, float duration, float wait = -1f)
+    {
+        if (wait >= 0f) yield return new WaitForSeconds(wait);
+        if (transform == "Shrink") scale = (1 / scale);
+        Vector3 target = new Vector3(size.x * scale, size.y * scale, size.z * scale);
+        morphee.gameObject.SetActive(true);
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            morphee.localScale = Vector3.Lerp(morphee.localScale, target, elapsed / duration);
+            yield return null;
+        }
+        if (morphee != null) morphee.localScale = target;
+    }
+    private IEnumerator Slide(Transform slidee, Vector3 position, Vector3 destination, float duration, float rotation = -1f, float wait = -1f, bool termination = false)
+    {
+        float elapsed = 0f;
+        Quaternion startRot = slidee.localRotation;
+        if (wait >= 0f) yield return new WaitForSeconds(wait);
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            slidee.localPosition = Vector3.Lerp(position, destination, t);
+            if (rotation >= 0f)
+            {
+                float currentAngle = Mathf.Lerp(0f, rotation, t);
+                slidee.localRotation = startRot * Quaternion.Euler(0f, 0f, currentAngle);
+            }
+            yield return null;
+        }
+        if (termination) Destroy(slidee.gameObject);
+    }
 } 
