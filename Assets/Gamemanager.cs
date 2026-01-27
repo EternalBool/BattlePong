@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections; 
 using TMPro; 
 using System.Timers;
-using UnityEditor.Rendering.Universal;
+//using UnityEditor.Rendering.Universal;
 
 public class Gamemanager : MonoBehaviour 
 { 
