@@ -38,7 +38,7 @@ public class BallGhostTrail : MonoBehaviour
                 {"g", 0f},
                 {"b", 0f},
             },
-            ["Spin"] = new Dictionary<string, float>
+            ["Spinning"] = new Dictionary<string, float>
             {
                 {"r", 1f},
                 {"g", 0.8f},
@@ -55,9 +55,9 @@ public class BallGhostTrail : MonoBehaviour
 
     void Update()
     {
-        velMode = velMode == "Spin" ? "Spin" : rb2d.linearVelocity.magnitude < minVelocity ? "Roaming" : Mathf.Abs(rb2d.linearVelocity.x) >= bongBall.maxVel ? "Maxxing" : "Dashing";
+        velMode = velMode == "Spinning" ? "Spinning" : rb2d.linearVelocity.magnitude < minVelocity ? "Roaming" : Mathf.Abs(rb2d.linearVelocity.x) >= bongBall.maxVel ? "Maxxing" : "Dashing";
         // Only emit ghosts if moving fast enough in any direction
-        if (rb2d != null && (rb2d.linearVelocity.magnitude > minVelocity || velMode == "Spin"))
+        if (rb2d != null && (rb2d.linearVelocity.magnitude > minVelocity || velMode == "Spinning"))
         {
             timer += Time.deltaTime;
             if (timer >= spawnInterval)

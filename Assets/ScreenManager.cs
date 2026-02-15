@@ -30,6 +30,7 @@ public class CharacterData
 public class InputBuffer
 {
     public bool space = false;
+    public bool tab = false;
     public bool wasd = false;
     public bool ijkl = false;
 }
@@ -37,6 +38,8 @@ public class ScreenManager : MonoBehaviour
 { 
     public Canvas canvas; 
     public Gamemanager gameManager;
+    public BongBall bongBall;
+    public Rimjob rimJob;
     public GameObject GamePanel;
     public GameObject IntroPanel;
     public GameObject p1;
@@ -719,6 +722,13 @@ public class ScreenManager : MonoBehaviour
         StartCoroutine(TypeText(GamePanel.transform.Find("GameOver").GetComponent<TextMeshProUGUI>(), null, false, 0, 0)); 
         StartCoroutine(ButtonScroll(false)); 
     } 
+    public void Pause(bool set)
+    {
+        float rate;
+        rate = (set) ? rimJob.rate * 3 : rimJob.rate * rimJob.mult * 3;
+        Debug.Log(set+" : "+rate);
+        StartCoroutine(Debounce(v => inputBuffer.tab = v, rate));
+    }
     void Start()
     {
         GameObject resetButton = GamePanel.transform.Find("Reset").gameObject; 
@@ -811,6 +821,17 @@ public class ScreenManager : MonoBehaviour
                 if (gameManager.gameInit && gameManager.playSel && !inputBuffer.ijkl && gameManager.p2face == "Botto")
                 {
                     if (!pb2db) IntensitySwap("P2", "Heat");
+                }
+            }
+        }
+        if (keyboard != null && gameManager != null && gameManager.gameProg)
+        {
+            if (keyboard.tabKey.wasPressedThisFrame || keyboard.tKey.wasPressedThisFrame)
+            {
+                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.tab && !bongBall.outBound)
+                { 
+                    StartCoroutine(gameManager.Pause(!gameManager.gameHalt));
+                    Pause(gameManager.gameHalt);
                 }
             }
         }

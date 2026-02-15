@@ -19,6 +19,10 @@ public class BongBall : MonoBehaviour
     public float maxVel;
     public float minYVel = 1.5f;
     public bool maxBouncyBool = false;
+    public bool outBound = false;
+    private bool isHalted;
+    private Vector2 haltPos;
+    private Vector2 storedVel;
 
     //public float spinSped = 5f; //EXPERIMENT
     //private float currSpin; //EXPERIMENT
@@ -28,10 +32,12 @@ public class BongBall : MonoBehaviour
     {
         if (other.CompareTag("P2S"))
         {
+            outBound = true;
             gameManager.PlayerScored("p2");
         }
         else if (other.CompareTag("P1S"))
         {
+            outBound = true;
             gameManager.PlayerScored("p1");
         }
     }
@@ -133,13 +139,33 @@ public class BongBall : MonoBehaviour
         transform.localRotation = startRot;
     }
 
-    public void halt() 
+    public void Reset() 
     { 
         bong.transform.position = Vector2.zero; 
         rb.linearVelocity = Vector2.zero;
     } 
+    public void Halt()
+    {
+        if (!isHalted)
+        {
+            Debug.Log("isHalted");
+            storedVel = rb.linearVelocity;
+            haltPos = transform.position;
+            rb.linearVelocity = Vector2.zero;
+            isHalted = true;
+        }
+    }
 
-    [System.Obsolete] 
+    public void Proceed()
+    {
+        if (isHalted && rb.linearVelocity == Vector2.zero)
+        {
+            Debug.Log("isntHalted");
+            if ((Vector2)transform.position == Vector2.zero) startVel(); else rb.linearVelocity = (Vector2.Distance(haltPos, transform.position) < 0.01f) ? storedVel : rb.linearVelocity;
+            storedVel = Vector2.zero;
+            isHalted = false;
+        }
+    }
     void Start()
     {
         /*

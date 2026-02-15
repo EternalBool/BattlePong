@@ -13,6 +13,7 @@ public class Gamemanager : MonoBehaviour
     public int p2score = 3;
     public bool gameInit = false;
     public bool gameProg = false;
+    public bool gameHalt = false;
     public bool playSel = false; 
     public string _p1face = "";
     public int PB1DIFF = 1;
@@ -21,6 +22,7 @@ public class Gamemanager : MonoBehaviour
 
     public BongBall bongBall; // Reference to BongBall script
     public ScreenManager screenManager; // Reference to ScreenManager script
+    public Rimjob rimJob;
     public GameObject bong;
     public GameObject p1;
     public GameObject p2;
@@ -112,8 +114,11 @@ public class Gamemanager : MonoBehaviour
 
     public IEnumerator centBong()
     {
+        
         yield return new WaitForSeconds(1f);
+        yield return new WaitUntil(() => !gameHalt);
 
+        bongBall.outBound = false;
         bong.transform.position = Vector2.zero;
 
         Rigidbody2D rb = bong.GetComponent<Rigidbody2D>();
@@ -126,7 +131,7 @@ public class Gamemanager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        if (gameProg)
+        if (gameProg && !gameHalt)
         {
             bongBall.startVel();
         }
@@ -136,6 +141,7 @@ public class Gamemanager : MonoBehaviour
         gameProg = true;
         gameInit = false;
         playSel = false;
+        gameHalt = false;
         yield return new WaitForSeconds(1f);
         bongBall.maxBounce(false);
         StartCoroutine(centBong());
@@ -143,7 +149,7 @@ public class Gamemanager : MonoBehaviour
     public void GameOver()
     {
         gameProg = false;
-        bongBall.halt();
+        bongBall.Reset();
         screenManager.OverScreen();
         Debug.Log("Game Over!");
     } 
@@ -154,6 +160,7 @@ public class Gamemanager : MonoBehaviour
         screenManager.ScreenOver();
         gameProg = true;
         gameInit = false;
+        gameHalt = false;
 
         if (bongBall != null)
         {
@@ -162,10 +169,27 @@ public class Gamemanager : MonoBehaviour
             bongBall.maxBounce(false);
         }
     }
+    public IEnumerator Pause(bool set)
+    {
+        gameHalt = set;
+        if (set)
+        {
+            bongBall.Halt();
+            Debug.Log("Freeze!");
+        }
+        else
+        {   
+            yield return new WaitForSeconds(rimJob.rate * rimJob.mult * 3);
+            bongBall.Proceed();
+            Debug.Log("Let it Burn!");
+        }
+        
+    }
     void Start()
     {
         gameInit = true;
         gameProg = false;
+        gameHalt = false;
         screenManager.Intro();
 
         GameObject leftWall= GameObject.FindGameObjectWithTag("P2S");
