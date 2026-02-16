@@ -40,6 +40,7 @@ public class ScreenManager : MonoBehaviour
     public Gamemanager gameManager;
     public BongBall bongBall;
     public Rimjob rimJob;
+    public GameObject bong;
     public GameObject GamePanel;
     public GameObject IntroPanel;
     public GameObject p1;
@@ -725,9 +726,25 @@ public class ScreenManager : MonoBehaviour
     public void Pause(bool set)
     {
         float rate;
-        rate = (set) ? rimJob.rate * 3 : rimJob.rate * rimJob.mult * 3;
+        rate = (set) ? rimJob.rate * 4 : rimJob.rate * rimJob.mult * 3;
         Debug.Log(set+" : "+rate);
         StartCoroutine(Debounce(v => inputBuffer.tab = v, rate));
+
+        Transform pauseFrame = canvas.transform.Find("PauseFrame");
+        Transform pauseMask = pauseFrame.Find("PauseMask");
+        GameObject pmframe = pauseMask.Find("Frame").gameObject;
+        if (set)
+        {
+            pauseMask.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(bong.transform.position);
+            pmframe.transform.GetComponent<Image>().color = Color.clear;
+            pauseMask.GetComponent<Image>().enabled = true;
+            StartCoroutine(Fade(pmframe, Color.clear, Color.white, rimJob.rate * 3, rimJob.rate * 2));
+        } 
+        else
+        {
+            StartCoroutine(Fade(pmframe, pmframe.transform.GetComponent<Image>().color, Color.clear, rimJob.rate));
+            pauseMask.transform.GetComponent<Image>().enabled = false;
+        }
     }
     void Start()
     {

@@ -85,14 +85,8 @@ public class BongBall : MonoBehaviour
     {
         rb.freezeRotation = true;
         bool isRight = UnityEngine.Random.value >= 0.5;
-        xVel = -1f;
-
-        if (isRight)
-        {
-            xVel = 1f;
-        }
-
-        yVel = UnityEngine.Random.Range(-(yMult + 1.5f), (yMult + 1.5f));
+        xVel = (isRight) ? 1f : -1f;
+        yVel = UnityEngine.Random.Range(-(yMult + 2.5f), (yMult + 2.5f));
         rb.linearVelocity = new Vector2(xVel * sped, yVel * yMult);
 
         Debug.Log($"GameManager = {gameManager}, gameProg = {gameManager?.gameProg}");
