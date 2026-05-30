@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: a58517a5776d3eb498dacc2efb2d3c32
+guid: 5d3bdfcacebc6e4429233da80f01adff
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8666810803198852612
-    second: PlaySel Buttton-1.png_0
+      213: -5292829205134137114
+    second: Esc Button_0
+  - first:
+      213: 7353610345599063511
+    second: Esc Button_1
+  - first:
+      213: -5887694239984131204
+    second: Esc Button_2
+  - first:
+      213: 6182655056718335426
+    second: Esc Button_3
+  - first:
+      213: 6859452523632044172
+    second: Esc Button_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +125,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PlaySel Buttton-1.png_0
+      name: Esc Button_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 1
-        width: 16
-        height: 13
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 40e7f2cb182b64870800000000000000
-      internalID: 8666810803198852612
+      spriteID: 6e8aa2b61e71c86b0800000000000000
+      internalID: -5292829205134137114
       vertices: []
       indices: 
       edges: []
@@ -138,7 +150,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 80d2608b649ebc743896bf1d06170be4
     internalID: 0
     vertices: []
     indices: 
@@ -146,9 +158,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      PlaySel Buttton-1.png_0: 8666810803198852612
+      Esc Button_0: -5292829205134137114
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -268,11 +268,11 @@ GameObject:
   - component: {fileID: 53411619}
   m_Layer: 5
   m_Name: ResetKey
-  m_TagString: PauseText
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &53411616
 RectTransform:
   m_ObjectHideFlags: 0
@@ -289,7 +289,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 875.87, y: -439.19998}
+  m_AnchoredPosition: {x: 525, y: -439.19998}
   m_SizeDelta: {x: 150, y: 141.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &53411618
@@ -1664,11 +1664,11 @@ GameObject:
   - component: {fileID: 613453763}
   m_Layer: 5
   m_Name: PlaySelText
-  m_TagString: PauseText
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &613453760
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1685,8 +1685,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -873.9, y: 330.3}
-  m_SizeDelta: {x: 50, y: 50}
+  m_AnchoredPosition: {x: 0, y: 450}
+  m_SizeDelta: {x: 903, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &613453762
 CanvasRenderer:
@@ -1716,10 +1716,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Player
-
-
-    Select'
+  m_text: Player Select
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -1746,8 +1743,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 55
-  m_fontSizeBase: 55
+  m_fontSize: 100
+  m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3427,11 +3424,11 @@ GameObject:
   - component: {fileID: 1079812149}
   m_Layer: 5
   m_Name: PlaySelButt
-  m_TagString: PauseText
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1079812146
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3448,7 +3445,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -875.87, y: 436.80005}
+  m_AnchoredPosition: {x: -556.93005, y: 436.80005}
   m_SizeDelta: {x: 150, y: 141.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1079812148
@@ -4111,11 +4108,11 @@ GameObject:
   - component: {fileID: 1275330312}
   m_Layer: 5
   m_Name: ResGameText
-  m_TagString: PauseText
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1275330309
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4132,8 +4129,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 873.9, y: 302}
-  m_SizeDelta: {x: 50, y: 50}
+  m_AnchoredPosition: {x: 0, y: -425}
+  m_SizeDelta: {x: 903, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1275330311
 CanvasRenderer:
@@ -4163,10 +4160,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Restart
-
-
-    Game'
+  m_text: Restart Game
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -4193,8 +4187,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 55
-  m_fontSizeBase: 55
+  m_fontSize: 100
+  m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6630,11 +6624,11 @@ GameObject:
   - component: {fileID: 1749806178}
   m_Layer: 5
   m_Name: PlaySelKey
-  m_TagString: PauseText
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1749806175
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6651,7 +6645,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -875.87, y: -439.2}
+  m_AnchoredPosition: {x: 556.9301, y: 436.8}
   m_SizeDelta: {x: 150, y: 141.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1749806177
@@ -6977,11 +6971,11 @@ GameObject:
   - component: {fileID: 1857601774}
   m_Layer: 5
   m_Name: ResetButt
-  m_TagString: PauseText
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1857601771
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6998,7 +6992,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 875.87, y: 439.2}
+  m_AnchoredPosition: {x: -525, y: -439.19998}
   m_SizeDelta: {x: 150, y: 141.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1857601773

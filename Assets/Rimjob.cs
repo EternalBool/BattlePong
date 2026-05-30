@@ -1,14 +1,17 @@
 using System.Collections;
+
 //using System.Numerics;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Rimjob : MonoBehaviour
 {
     public GameObject rim1;
     private Vector2 rsc = new Vector2(0.67f,0.67f);
     public GameObject rim2;
+    [SerializeField] private Image pauseMask;
     public GameObject rimJob;
     public BongBall bongBall;
     public Gamemanager gameManager;
@@ -22,6 +25,7 @@ public class Rimjob : MonoBehaviour
     {
         rb2d = GetComponent<Rigidbody2D>();
         rimJob.SetActive(false);
+        pauseMask.enabled = false;
         rim1.transform.localScale = Vector2.zero;
         rim2.transform.localScale = Vector2.zero;
     }

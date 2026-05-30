@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.UI;
+using TMPro;
 
-public class CutoutMaskUI : Image
+public class CutoutMaskTMP : TextMeshProUGUI
 {
     private Material _cached;
 
@@ -11,11 +11,10 @@ public class CutoutMaskUI : Image
         get
         {
             var baseMat = base.materialForRendering;
-            if (baseMat == null) return null;
 
             if (_cached == null || _cached.shader != baseMat.shader)
             {
-                if (_cached != null) Destroy(_cached);
+                if (_cached != null) DestroyImmediate(_cached);
                 _cached = new Material(baseMat);
             }
             else
@@ -28,10 +27,10 @@ public class CutoutMaskUI : Image
         }
     }
 
-    protected override void OnDestroy()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         if (_cached != null) DestroyImmediate(_cached);
         _cached = null;
-        base.OnDestroy();
     }
 }

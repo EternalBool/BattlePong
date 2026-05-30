@@ -73,9 +73,10 @@ public class BallGhostTrail : MonoBehaviour
         GameObject ghost = Instantiate(ghostPrefab, transform.position, transform.rotation);
         SpriteRenderer sr = ghost.GetComponent<SpriteRenderer>();
         SpriteRenderer mainSR = GetComponent<SpriteRenderer>();
-        if (sr != null)
+        if (sr != null) {
             sr.sortingOrder = mainSR.sortingOrder - 1;
             StartCoroutine(FadeAndShrink(ghost, sr));
+        }
     }
 
     private IEnumerator FadeAndShrink(GameObject ghost, SpriteRenderer sr)

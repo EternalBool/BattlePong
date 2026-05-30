@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: db4ef78892db5e340bdcebce9e3aee14
+guid: ac925376e02b1c64e9ba5679c86c30a5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4866308375742634261
-    second: Reset Buttton-1.png_0
+      213: -4575460572097088643
+    second: Reset Text_0
+  - first:
+      213: -8122593600244519013
+    second: Reset Text_1
+  - first:
+      213: -1088338140445757371
+    second: Reset Text_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +119,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Reset Buttton-1.png_0
+      name: Reset Text_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 1
-        width: 16
-        height: 13
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 519d5a75fa9988340800000000000000
-      internalID: 4866308375742634261
+      spriteID: d73f85cf9d2b080c0800000000000000
+      internalID: -4575460572097088643
       vertices: []
       indices: 
       edges: []
@@ -138,7 +144,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: b8e9d8571a96d0f46bcca89f4ce495b6
     internalID: 0
     vertices: []
     indices: 
@@ -146,9 +152,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Reset Buttton-1.png_0: 4866308375742634261
+      Reset Text_0: -4575460572097088643
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

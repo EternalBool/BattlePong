@@ -4918,7 +4918,7 @@ GameObject:
   - component: {fileID: 1389051255}
   m_Layer: 5
   m_Name: P2Face
-  m_TagString: Untagged
+  m_TagString: Face
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5675,7 +5675,7 @@ GameObject:
   - component: {fileID: 1488707994}
   m_Layer: 5
   m_Name: Divisi
-  m_TagString: Untagged
+  m_TagString: Face
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7649,7 +7649,7 @@ GameObject:
   - component: {fileID: 1928091114}
   m_Layer: 5
   m_Name: P1Face
-  m_TagString: Untagged
+  m_TagString: Face
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

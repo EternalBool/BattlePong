@@ -18,6 +18,8 @@ using NUnit.Framework;
 using UnityEngine.PlayerLoop;
 //using UnityEditor.Rendering;
 using Unity.Burst.Intrinsics;
+using UnityEngine.Animations;
+//using System.Diagnostics;
 //using System.Numerics;
 //using UnityEngine.UIElements;
 public class CharacterData
@@ -47,6 +49,7 @@ public class ScreenManager : MonoBehaviour
     public GameObject p2;
     public TextMeshProUGUI p1express;
     public TextMeshProUGUI p2express;
+    public TextMeshProUGUI divisi;
     private bool endGame = false; 
     private string GOTxt = "Game Over luh bruh";
     private string INTxt = "Battle Pong";
@@ -612,6 +615,7 @@ public class ScreenManager : MonoBehaviour
         {
             p1express.enabled = false;
             p2express.enabled = false;
+            divisi.enabled = false;
             p1express.transform.localScale *= scale;
             p2express.transform.localScale *= scale;
             p1express.GetComponent<RectTransform>().anchoredPosition = poneFlexPos;
@@ -683,6 +687,7 @@ public class ScreenManager : MonoBehaviour
         else if (type == "Out")
         {
             poneRes.enabled = false; pwoRes.enabled = false;
+            divisi.enabled = true;
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
@@ -733,16 +738,30 @@ public class ScreenManager : MonoBehaviour
         Transform pauseFrame = canvas.transform.Find("PauseFrame");
         Transform pauseMask = pauseFrame.Find("PauseMask");
         GameObject pmframe = pauseMask.Find("Frame").gameObject;
+        for (int i = 0; i < pauseFrame.childCount; i++)
+        {
+            Transform child = pauseFrame.GetChild(i);
+            if (child.CompareTag("PauseText"))
+            {
+                child.gameObject.SetActive(set);
+            }
+            else if (child.CompareTag("Face"))
+            {
+                child.gameObject.SetActive(!set);
+            }
+        }
+
         if (set)
         {
             pauseMask.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(bong.transform.position);
             pmframe.transform.GetComponent<Image>().color = Color.clear;
             pauseMask.GetComponent<Image>().enabled = true;
+            
             StartCoroutine(Fade(pmframe, Color.clear, Color.white, rimJob.rate * 3, rimJob.rate * 2));
         } 
         else
         {
-            StartCoroutine(Fade(pmframe, pmframe.transform.GetComponent<Image>().color, Color.clear, rimJob.rate));
+            StartCoroutine(Fade(pmframe, pmframe.transform.GetComponent<Image>().color, Color.clear, rimJob.rate * 3));
             pauseMask.transform.GetComponent<Image>().enabled = false;
         }
     }
@@ -769,6 +788,10 @@ public class ScreenManager : MonoBehaviour
                 if (!gameManager.gameInit && !gameManager.playSel && endGame)
                 {
                     gameManager.OverGame();
+                }
+                if (!gameManager.gameInit && !gameManager.playSel && gameManager.gameHalt)
+                {
+                    Debug.Log("Reset Game!");
                 }
             }
             if (keyboard.spaceKey.wasPressedThisFrame)

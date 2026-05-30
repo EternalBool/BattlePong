@@ -59,7 +59,7 @@ public class BongBall : MonoBehaviour
             }
             if (Math.Abs(padVelY) > 0)
             {
-                bongTrail.velMode = "Spin";
+                bongTrail.velMode = "Spinning";
                 Debug.Log("velMode: " + bongTrail.velMode);
                 StartCoroutine(Spin(0.5f, padVelY));
             }
