@@ -38,7 +38,7 @@ public class Pad1 : MonoBehaviour
 
     void Update()
     {
-        pc = gameManager.p1face == "Botto" ? false : true;
+        pc = gameManager.p1face == "Botto" ? false : gameManager.gameHalt ? false : true;
         float bound = 4.35f - (transform.localScale.y / 2);
         if (pc)
         {

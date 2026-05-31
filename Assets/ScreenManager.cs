@@ -322,6 +322,12 @@ public class ScreenManager : MonoBehaviour
             }
         }
     }
+    public void FaceVis(bool set)
+    {
+        p1express.enabled = set;
+        p2express.enabled = set;
+        divisi.enabled = set;
+    }
     private void IntensitySwap(string player, string temp)
     {
         GameObject pb1p = IntroPanel.transform.Find("PB1Panel").gameObject;
@@ -745,10 +751,12 @@ public class ScreenManager : MonoBehaviour
             {
                 child.gameObject.SetActive(set);
             }
+            /*
             else if (child.CompareTag("Face"))
             {
                 child.gameObject.SetActive(!set);
             }
+            */
         }
 
         if (set)

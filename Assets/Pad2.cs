@@ -36,7 +36,7 @@ public class Pad2 : MonoBehaviour
     // Update is called once per frame 
     void Update()
     {
-        pc = gameManager.p2face == "Botto" ? false : true;
+        pc = gameManager.p2face == "Botto" ? false : gameManager.gameHalt ? false : true;
         float bound = 4.35f - (transform.localScale.y / 2);
         if (pc)
         {
