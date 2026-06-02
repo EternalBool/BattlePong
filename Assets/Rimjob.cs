@@ -63,10 +63,33 @@ public class Rimjob : MonoBehaviour
         screenManager.FaceVis(true);
     }
     // Update is called once per frame
+    public IEnumerator RimToHole(float duration)
+    {
+        float elapsed = 0f;
+        Vector2 startPos = transform.localPosition;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed/duration;
+            transform.localPosition = Vector2.Lerp(startPos, Vector2.zero, t);
+            rim1.transform.localPosition = Vector2.Lerp(startPos, Vector2.zero, t);
+            rim2.transform.localPosition = Vector2.Lerp(startPos, Vector2.zero, t);
+            back.transform.localPosition = Vector2.Lerp(startPos, Vector2.zero, t);
+            pauseMask.GetComponent<RectTransform>().position = Vector2.Lerp(pauseMask.GetComponent<RectTransform>().position, Camera.main.WorldToScreenPoint(Vector2.zero), t);
+            yield return null;
+        }
+        transform.localPosition = Vector2.zero;
+        rim1.transform.localPosition = Vector2.zero;
+        rim2.transform.localPosition = Vector2.zero;
+        back.transform.localPosition = Vector2.zero;
+        pauseMask.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(Vector2.zero);
+    }
     void Update()
     {
         //rimmed = (gameManager.gameHalt) ? true : false;
-        if (gameManager.gameHalt)
+        if (gameManager.gameProg)
+        {
+            if (gameManager.gameHalt)
         {
             if (!rimmed)
             {
@@ -78,6 +101,7 @@ public class Rimjob : MonoBehaviour
         {
             if (rimmed) StartCoroutine(Contract());
             rimmed = false;
+        }
         }
     }
 }

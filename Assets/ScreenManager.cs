@@ -19,6 +19,8 @@ using UnityEngine.PlayerLoop;
 //using UnityEditor.Rendering;
 using Unity.Burst.Intrinsics;
 using UnityEngine.Animations;
+//using UnityEngine.UIElements;
+//using UnityEngine.UIElements;
 //using System.Diagnostics;
 //using System.Numerics;
 //using UnityEngine.UIElements;
@@ -33,8 +35,10 @@ public class InputBuffer
 {
     public bool space = false;
     public bool tab = false;
+    public bool esc = false;
     public bool wasd = false;
     public bool ijkl = false;
+    public bool r = false;
 }
 public class ScreenManager : MonoBehaviour 
 { 
@@ -167,7 +171,7 @@ public class ScreenManager : MonoBehaviour
         IntroPanel.SetActive(true);
         StartCoroutine(Debounce(v => inputBuffer.space = v, 3f));
         StartCoroutine(TypeText(introText, INTxt, true, 0.1f, 0));
-        StartCoroutine(TextPulse(spacePrompt, () => gameManager.playSel == true, 2f, 3f));
+        StartCoroutine(Blink(spacePrompt.gameObject, () => gameManager.playSel == true, 2f, 3f));
     }
     public void PlayerSelect()
     {
@@ -180,7 +184,7 @@ public class ScreenManager : MonoBehaviour
         RectTransform p1p = IntroPanel.transform.Find("P1Panel").GetComponent<RectTransform>();
         RectTransform p2p = IntroPanel.transform.Find("P2Panel").GetComponent<RectTransform>();
         gameManager.playSel = true;
-        StartCoroutine(TextPulse(spacePrompt, null, 15f, 0f, 1f));
+        StartCoroutine(Blink(spacePrompt.gameObject, null, 15f, 0f, 1f));
         StartCoroutine(Debounce(v => inputBuffer.wasd = v, 3f));
         StartCoroutine(Debounce(v => inputBuffer.ijkl = v, 3f));
         StartCoroutine(Debounce(v => inputBuffer.space = v, 5f));
@@ -420,25 +424,32 @@ public class ScreenManager : MonoBehaviour
         yield return new WaitForSeconds(wait);
         setter(false);
     }
-    private IEnumerator TextPulse(TextMeshProUGUI pulseText, Func<bool> condition, float pulseSpeed, float wait, float duration = -1f)
+    private IEnumerator Blink(GameObject blinker, Func<bool> condition, float pulseSpeed, float wait = -1f, float duration = -1f)
     {
-        Color baseColor = new Color(pulseText.color.r, pulseText.color.g, pulseText.color.b, 1f);
+        Image img = blinker.GetComponent<Image>();
+        TextMeshProUGUI tmp = blinker.GetComponent<TextMeshProUGUI>();
+        Color baseColor = Color.white;
+        if (img != null) {baseColor = new Color(img.color.r, img.color.g, img.color.b, 1f);}
+        if (tmp != null) {baseColor = new Color(tmp.color.r, tmp.color.g, tmp.color.b, 1f);}
         float alpha = 1f;
 
-        yield return new WaitForSeconds(wait);
-        pulseText.enabled = true;
+        if (wait > 0) {yield return new WaitForSeconds(wait);}
+        if (img != null) {img.enabled = true;}
+        if (tmp != null) {tmp.enabled = true;}
         float elapsed = 0f;
 
         while (true)
         {
             alpha = Mathf.PingPong(Time.time * pulseSpeed, 1f);
-            pulseText.color = new Color(baseColor.r, baseColor.g, baseColor.b, alpha);
+            if (img != null) {img.color = new Color(baseColor.r, baseColor.g, baseColor.b, alpha);}
+            if (tmp != null) {tmp.color = new Color(baseColor.r, baseColor.g, baseColor.b, alpha);}
             yield return null;
             elapsed += Time.deltaTime;
             if (condition != null && condition()) break;
             if (duration >= 0 && elapsed >= duration) break;
         }
-        pulseText.color = baseColor;
+        if (img != null) {img.color = baseColor;}
+        if (tmp != null) {tmp.color = baseColor;}
     }
     private IEnumerator TypeText(TextMeshProUGUI typeText, string endText, bool set, float delay, float wait)
     {
@@ -458,7 +469,6 @@ public class ScreenManager : MonoBehaviour
             }
         }
     }
-    /*
     private IEnumerator Morph(Transform morphee, Vector2 size, string transform, float scale, float duration, float wait = -1f)
     {
         if (wait >= 0f) yield return new WaitForSeconds(wait);
@@ -475,7 +485,22 @@ public class ScreenManager : MonoBehaviour
         }
         if (morphee != null) morphee.localScale = target;
     }
-    */
+    private IEnumerator Morph(Transform morphee, Vector2 target, float duration, float wait = -1f)
+    {
+        if (wait >= 0f) yield return new WaitForSeconds(wait);
+        //if (transform == "Shrink") scale = (1 / scale);
+        //Vector2 target = new Vector2(size.x * scale, size.y * scale);
+        morphee.gameObject.SetActive(true);
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            morphee.localScale = Vector2.Lerp(morphee.localScale, target, elapsed / duration);
+            yield return null;
+        }
+        if (morphee != null) morphee.localScale = target;
+    }
     private IEnumerator Fade(GameObject fader, Color baseColor, Color goalColor, float duration, float wait = -1f)
     {
         Image img = fader.GetComponent<Image>();
@@ -720,6 +745,32 @@ public class ScreenManager : MonoBehaviour
             }
         }
     }
+    private IEnumerator ReCenter()
+    {
+        StartCoroutine(Debounce(v => inputBuffer.esc = v, 2f));
+        StartCoroutine(Debounce(v => inputBuffer.r = v, 2f));
+        StartCoroutine(rimJob.RimToHole(1f));
+        Transform pauseFrame = canvas.transform.Find("PauseFrame");
+        Transform pauseMask = pauseFrame.Find("PauseMask");
+        GameObject pmframe = pauseMask.Find("Frame").gameObject;
+        for (int i = 0; i < pauseFrame.childCount; i++)
+        {
+            Transform child = pauseFrame.GetChild(i);
+            if (child.CompareTag("PauseText"))
+            {
+                if (child.name.StartsWith("Reset"))
+                {
+                    StartCoroutine(Blink(child.gameObject, null, 10f, -1f, 1.5f));
+                } else if (child.name.StartsWith("PlaySel"))
+                {
+                    StartCoroutine(Fade(child.gameObject, Color.white, Color.clear, 1f));
+                }
+            }
+        }
+        yield return new WaitForSeconds(1.5f);
+        StartCoroutine(gameManager.Pause(!gameManager.gameHalt));
+        Pause(gameManager.gameHalt);
+    }
     public void ScreenIn()
     {
         Initialize();
@@ -746,11 +797,18 @@ public class ScreenManager : MonoBehaviour
         StartCoroutine(TypeText(GamePanel.transform.Find("GameOver").GetComponent<TextMeshProUGUI>(), null, false, 0, 0)); 
         StartCoroutine(ButtonScroll(false)); 
     } 
+    public void RestartScreen()
+    {
+        Initialize();
+        UpdateScore(gameManager.p1score, gameManager.p1face, gameManager.p2score, gameManager.p2face);
+        StartCoroutine(p1.GetComponent<Pad1>().ResetPos());
+        StartCoroutine(p2.GetComponent<Pad2>().ResetPos());
+        StartCoroutine(ReCenter());
+    }
     public void Pause(bool set)
     {
         float rate;
         rate = (set) ? rimJob.rate * 4 : rimJob.rate * rimJob.mult * 3;
-        Debug.Log(set+" : "+rate);
         StartCoroutine(Debounce(v => inputBuffer.tab = v, rate));
 
         Transform pauseFrame = canvas.transform.Find("PauseFrame");
@@ -762,13 +820,11 @@ public class ScreenManager : MonoBehaviour
             if (child.CompareTag("PauseText"))
             {
                 child.gameObject.SetActive(set);
+                Image img = child.GetComponent<Image>() ? child.GetComponent<Image>() : null;
+                TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>() ? child.GetComponent<TextMeshProUGUI>() : null;
+                if (img != null) {img.color = Color.white;}
+                if (tmp != null) {tmp.color = Color.white;}
             }
-            /*
-            else if (child.CompareTag("Face"))
-            {
-                child.gameObject.SetActive(!set);
-            }
-            */
         }
 
         if (set)
@@ -808,10 +864,6 @@ public class ScreenManager : MonoBehaviour
                 if (!gameManager.gameInit && !gameManager.playSel && endGame)
                 {
                     gameManager.OverGame();
-                }
-                if (!gameManager.gameInit && !gameManager.playSel && gameManager.gameHalt)
-                {
-                    Debug.Log("Reset Game!");
                 }
             }
             if (keyboard.spaceKey.wasPressedThisFrame)
@@ -894,57 +946,21 @@ public class ScreenManager : MonoBehaviour
                     Pause(gameManager.gameHalt);
                 }
             }
+            if (keyboard.rKey.wasPressedThisFrame)
+            {
+                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.r && gameManager.gameHalt)
+                {
+                    Debug.Log("Restart Game!");
+                    RestartScreen();
+                }
+            }
+            if (keyboard.escapeKey.wasReleasedThisFrame)
+            {
+                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.esc && gameManager.gameHalt)
+                {
+                    Debug.Log("Back to Player Selection!");
+                }
+            }
         }
     } 
-    private IEnumerator Morph(Transform morphee, Vector2 size, string transform, float scale, float duration, float wait = -1f)
-    {
-        if (wait >= 0f) yield return new WaitForSeconds(wait);
-        if (transform == "Shrink") scale = (1 / scale);
-        Vector2 target = new Vector2(size.x * scale, size.y * scale);
-        morphee.gameObject.SetActive(true);
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            morphee.localScale = Vector2.Lerp(morphee.localScale, target, elapsed / duration);
-            yield return null;
-        }
-        if (morphee != null) morphee.localScale = target;
-    }
-    private IEnumerator Morph(Transform morphee, Vector2 target, float duration, float wait = -1f)
-    {
-        if (wait >= 0f) yield return new WaitForSeconds(wait);
-        //if (transform == "Shrink") scale = (1 / scale);
-        //Vector2 target = new Vector2(size.x * scale, size.y * scale);
-        morphee.gameObject.SetActive(true);
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            morphee.localScale = Vector2.Lerp(morphee.localScale, target, elapsed / duration);
-            yield return null;
-        }
-        if (morphee != null) morphee.localScale = target;
-    }
-    private IEnumerator Slide(Transform slidee, Vector3 position, Vector3 destination, float duration, float rotation = -1f, float wait = -1f, bool termination = false)
-    {
-        float elapsed = 0f;
-        Quaternion startRot = slidee.localRotation;
-        if (wait >= 0f) yield return new WaitForSeconds(wait);
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-            slidee.localPosition = Vector3.Lerp(position, destination, t);
-            if (rotation >= 0f)
-            {
-                float currentAngle = Mathf.Lerp(0f, rotation, t);
-                slidee.localRotation = startRot * Quaternion.Euler(0f, 0f, currentAngle);
-            }
-            yield return null;
-        }
-        if (termination) Destroy(slidee.gameObject);
-    }
 } 

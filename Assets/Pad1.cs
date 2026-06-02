@@ -66,7 +66,7 @@ public class Pad1 : MonoBehaviour
             }
             else
             {
-                transform.position = padPos;
+                ResetPos();
             }
             vertVel = (transform.position.y - lastY) / Time.deltaTime;
             lastY = transform.position.y;
@@ -82,6 +82,18 @@ public class Pad1 : MonoBehaviour
                     t = 0f;
                 }
             }
+        }
+    }
+    public IEnumerator ResetPos()
+    {
+        float duration = 1f;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            elapsed += Time.deltaTime;
+            transform.position = Vector3.Lerp(transform.position, padPos, t);
+            yield return null;
         }
     }
     private IEnumerator BallerP(float bound)
