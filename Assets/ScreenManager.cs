@@ -327,6 +327,16 @@ public class ScreenManager : MonoBehaviour
         p1express.enabled = set;
         p2express.enabled = set;
         divisi.enabled = set;
+        if (set)
+        {
+            StartCoroutine(Fade(p1express.gameObject, Color.clear, p1express.color, 0.5f));
+            StartCoroutine(Fade(p2express.gameObject, Color.clear, p2express.color, 0.5f));
+            StartCoroutine(Fade(divisi.gameObject, Color.clear, divisi.color, 0.5f));
+        }
+    }
+    public void GrowBall(Transform bong, Vector2 target)
+    {
+        StartCoroutine(Morph(bong, target, 0.5f));
     }
     private void IntensitySwap(string player, string temp)
     {
@@ -448,6 +458,7 @@ public class ScreenManager : MonoBehaviour
             }
         }
     }
+    /*
     private IEnumerator Morph(Transform morphee, Vector2 size, string transform, float scale, float duration, float wait = -1f)
     {
         if (wait >= 0f) yield return new WaitForSeconds(wait);
@@ -464,6 +475,7 @@ public class ScreenManager : MonoBehaviour
         }
         if (morphee != null) morphee.localScale = target;
     }
+    */
     private IEnumerator Fade(GameObject fader, Color baseColor, Color goalColor, float duration, float wait = -1f)
     {
         Image img = fader.GetComponent<Image>();
@@ -884,18 +896,34 @@ public class ScreenManager : MonoBehaviour
             }
         }
     } 
-    private IEnumerator Morph(Transform morphee, Vector3 size, string transform, float scale, float duration, float wait = -1f)
+    private IEnumerator Morph(Transform morphee, Vector2 size, string transform, float scale, float duration, float wait = -1f)
     {
         if (wait >= 0f) yield return new WaitForSeconds(wait);
         if (transform == "Shrink") scale = (1 / scale);
-        Vector3 target = new Vector3(size.x * scale, size.y * scale, size.z * scale);
+        Vector2 target = new Vector2(size.x * scale, size.y * scale);
         morphee.gameObject.SetActive(true);
         float elapsed = 0f;
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            morphee.localScale = Vector3.Lerp(morphee.localScale, target, elapsed / duration);
+            morphee.localScale = Vector2.Lerp(morphee.localScale, target, elapsed / duration);
+            yield return null;
+        }
+        if (morphee != null) morphee.localScale = target;
+    }
+    private IEnumerator Morph(Transform morphee, Vector2 target, float duration, float wait = -1f)
+    {
+        if (wait >= 0f) yield return new WaitForSeconds(wait);
+        //if (transform == "Shrink") scale = (1 / scale);
+        //Vector2 target = new Vector2(size.x * scale, size.y * scale);
+        morphee.gameObject.SetActive(true);
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            morphee.localScale = Vector2.Lerp(morphee.localScale, target, elapsed / duration);
             yield return null;
         }
         if (morphee != null) morphee.localScale = target;

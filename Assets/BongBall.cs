@@ -18,6 +18,7 @@ public class BongBall : MonoBehaviour
     public float yMult = 2f;
     public float maxVel;
     public float minYVel = 1.5f;
+    public Vector2[] bosc = {new Vector2(0.5f, 0.5f), new Vector2(0f,0f)};
     public bool maxBouncyBool = false;
     public bool outBound = false;
     private bool isHalted;
@@ -135,6 +136,7 @@ public class BongBall : MonoBehaviour
 
     public void Reset() 
     { 
+        bong.transform.localScale = bosc[1];
         bong.transform.position = Vector2.zero; 
         rb.linearVelocity = Vector2.zero;
     } 

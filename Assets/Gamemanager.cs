@@ -119,7 +119,9 @@ public class Gamemanager : MonoBehaviour
         yield return new WaitUntil(() => !gameHalt);
 
         bongBall.outBound = false;
+        bong.transform.localScale = bongBall.bosc[1];
         bong.transform.position = Vector2.zero;
+        screenManager.GrowBall(bong.transform, bongBall.bosc[0]);
 
         Rigidbody2D rb = bong.GetComponent<Rigidbody2D>();
         float xVel = bong.GetComponent<BongBall>().xVel;
@@ -161,6 +163,7 @@ public class Gamemanager : MonoBehaviour
         gameProg = true;
         gameInit = false;
         gameHalt = false;
+        bong.transform.localScale = bongBall.bosc[1];
 
         if (bongBall != null)
         {
@@ -191,6 +194,7 @@ public class Gamemanager : MonoBehaviour
         gameProg = false;
         gameHalt = false;
         screenManager.Intro();
+        bong.transform.localScale = bongBall.bosc[1];
 
         GameObject leftWall= GameObject.FindGameObjectWithTag("P2S");
         GameObject rightWall = GameObject.FindGameObjectWithTag("P1S");
