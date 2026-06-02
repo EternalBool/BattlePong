@@ -22,8 +22,8 @@ public class BongBall : MonoBehaviour
     public bool maxBouncyBool = false;
     public bool outBound = false;
     private bool isHalted;
-    private Vector2 haltPos;
     private Vector2 storedVel;
+    private float storedAngularVel;
 
     //public float spinSped = 5f; //EXPERIMENT
     //private float currSpin; //EXPERIMENT
@@ -146,19 +146,22 @@ public class BongBall : MonoBehaviour
         {
             Debug.Log("isHalted");
             storedVel = rb.linearVelocity;
-            haltPos = transform.position;
+            storedAngularVel = rb.angularVelocity;
             rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.simulated = false;
             isHalted = true;
         }
     }
-
     public void Proceed()
     {
-        if (isHalted && rb.linearVelocity == Vector2.zero)
+        if (isHalted)
         {
             Debug.Log("isntHalted");
-            if ((Vector2)transform.position == Vector2.zero) startVel(); else rb.linearVelocity = (Vector2.Distance(haltPos, transform.position) < 0.01f) ? storedVel : rb.linearVelocity;
+            rb.simulated = true;
+            if ((Vector2)transform.position == Vector2.zero) startVel(); else {rb.linearVelocity = storedVel ; rb.angularVelocity = storedAngularVel;}
             storedVel = Vector2.zero;
+            storedAngularVel = 0f;
             isHalted = false;
         }
     }
