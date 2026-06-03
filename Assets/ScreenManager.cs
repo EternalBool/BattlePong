@@ -52,7 +52,9 @@ public class ScreenManager : MonoBehaviour
     public TextMeshProUGUI p1express;
     public TextMeshProUGUI p2express;
     public TextMeshProUGUI divisi;
-    private bool endGame = false; 
+    private bool endGame = false;
+    private bool resGame = false;
+    private bool rePlay = false;
     private string GOTxt = "Game Over luh bruh";
     private string INTxt = "Battle Pong";
     public InputBuffer inputBuffer = new InputBuffer();
@@ -182,7 +184,13 @@ public class ScreenManager : MonoBehaviour
         RectTransform p1p = IntroPanel.transform.Find("P1Panel").GetComponent<RectTransform>();
         RectTransform p2p = IntroPanel.transform.Find("P2Panel").GetComponent<RectTransform>();
         gameManager.playSel = true;
-        StartCoroutine(Blink(spacePrompt.gameObject, null, 15f, 0f, 1f));
+        if (rePlay)
+        {
+            //StartCoroutine(Morph(bong.transform, bong.transform.localScale, "Grow", 3f, 2f));
+            StartCoroutine(Debounce(v => rePlay = v, 2f));
+        } else {
+            StartCoroutine(Blink(spacePrompt.gameObject, null, 15f, 0f, 1f));  
+        }
         StartCoroutine(Debounce(v => inputBuffer.wasd = v, 3f));
         StartCoroutine(Debounce(v => inputBuffer.ijkl = v, 3f));
         StartCoroutine(Debounce(v => inputBuffer.space = v, 5f));
@@ -743,12 +751,8 @@ public class ScreenManager : MonoBehaviour
             }
         }
     }
-    private IEnumerator ReCenter()
+    private void PauseSelect(string type)
     {
-        StartCoroutine(Debounce(v => inputBuffer.esc = v, 3f));
-        StartCoroutine(Debounce(v => inputBuffer.tab = v, 3f));
-        StartCoroutine(Debounce(v => inputBuffer.r = v, 2f));
-        StartCoroutine(rimJob.RimToHole(1f));
         Transform pauseFrame = canvas.transform.Find("PauseFrame");
         Transform pauseMask = pauseFrame.Find("PauseMask");
         GameObject pmframe = pauseMask.Find("Frame").gameObject;
@@ -759,19 +763,45 @@ public class ScreenManager : MonoBehaviour
             {
                 if (child.name.StartsWith("Reset"))
                 {
-                    StartCoroutine(Blink(child.gameObject, null, 10f, -1f, 1.5f));
+                    if (type == "Restart")
+                    {
+                        StartCoroutine(Blink(child.gameObject, null, 10f, -1f, 1.5f));
+                    } else
+                    {
+                        Image img = child.GetComponent<Image>();
+                        TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>();
+                        if (img != null) {StartCoroutine(Fade(child.gameObject, Color.white, Color.clear, 1f));}
+                        if (tmp != null) {StartCoroutine(Fade(child.gameObject, new Color32(128,15,19,255), Color.clear, 1f));}
+                    }
+                    
                 } else if (child.name.StartsWith("PlaySel"))
                 {
-                    Image img = child.GetComponent<Image>();
-                    TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>();
-                    if (img != null) {StartCoroutine(Fade(child.gameObject, Color.white, Color.clear, 1f));}
-                    if (tmp != null) {StartCoroutine(Fade(child.gameObject, new Color32(128,15,19,255), Color.clear, 1f));}
+                    if (type == "PlaySel")
+                    {
+                        StartCoroutine(Blink(child.gameObject, null, 10f, -1f, 1.5f));
+                    } else {
+                        Image img = child.GetComponent<Image>();
+                        TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>();
+                        if (img != null) {StartCoroutine(Fade(child.gameObject, Color.white, Color.clear, 1f));}
+                        if (tmp != null) {StartCoroutine(Fade(child.gameObject, new Color32(128,15,19,255), Color.clear, 1f));}
+                    }
+                    
                  }
             }
         }
+    }
+    private IEnumerator ReCenter()
+    {
+        StartCoroutine(Debounce(v => inputBuffer.esc = v, 3f));
+        StartCoroutine(Debounce(v => inputBuffer.tab = v, 3f));
+        StartCoroutine(Debounce(v => inputBuffer.r = v, 2f));
+        StartCoroutine(rimJob.RimToHole(1f));
+        PauseSelect("Restart");
         yield return new WaitForSeconds(1.5f);
         StartCoroutine(gameManager.Pause(!gameManager.gameHalt));
         Pause(gameManager.gameHalt);
+        yield return new WaitForSeconds(rimJob.rate * rimJob.mult * 3f);
+        resGame = false;
     }
     public void ScreenIn()
     {
@@ -806,6 +836,15 @@ public class ScreenManager : MonoBehaviour
         StartCoroutine(p1.GetComponent<Pad1>().ResetPos());
         StartCoroutine(p2.GetComponent<Pad2>().ResetPos());
         StartCoroutine(ReCenter());
+    }
+    public void ReplayScreen()
+    {
+        gameManager.gameInit = true;
+        gameManager.gameProg = false;
+        gameManager.gameHalt = false;
+        PauseSelect("PlaySel");
+        StartCoroutine(Morph(bong.transform, bong.transform.localScale, "Grow", 4f, 6f));
+        PlayerSelect();
     }
     public void Pause(bool set)
     {
@@ -942,25 +981,28 @@ public class ScreenManager : MonoBehaviour
         {
             if (keyboard.tabKey.wasPressedThisFrame || keyboard.tKey.wasPressedThisFrame)
             {
-                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.tab && !bongBall.outBound)
-                { 
+                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.tab && !bongBall.outBound && !resGame)
+                {
                     StartCoroutine(gameManager.Pause(!gameManager.gameHalt));
                     Pause(gameManager.gameHalt);
                 }
             }
             if (keyboard.rKey.wasPressedThisFrame)
             {
-                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.r && gameManager.gameHalt)
+                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.r && gameManager.gameHalt && !resGame)
                 {
                     Debug.Log("Restart Game!");
                     RestartScreen();
+                    resGame = true;
                 }
             }
             if (keyboard.escapeKey.wasReleasedThisFrame)
             {
-                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.esc && gameManager.gameHalt)
+                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.esc && gameManager.gameHalt && !resGame)
                 {
                     Debug.Log("Back to Player Selection!");
+                    rePlay = true;
+                    ReplayScreen();
                 }
             }
         }

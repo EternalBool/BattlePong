@@ -53,10 +53,10 @@ public class Rimjob : MonoBehaviour
     private IEnumerator Contract()
     {
         back.transform.localScale = bsc[1];
-        yield return new WaitForSeconds(rate*10);
+        yield return new WaitForSeconds(rate*mult);
         rim2.transform.localScale = Vector2.zero;
         back.transform.localScale = bsc[2];
-        yield return new WaitForSeconds(rate*10);
+        yield return new WaitForSeconds(rate*mult);
         rim1.transform.localScale = Vector2.zero;
         back.transform.localScale = Vector2.zero;
         rimJob.SetActive(false);
@@ -90,18 +90,18 @@ public class Rimjob : MonoBehaviour
         if (gameManager.gameProg)
         {
             if (gameManager.gameHalt)
-        {
-            if (!rimmed)
             {
-                rimmed = true;
-                StartCoroutine(Expand());
+                if (!rimmed)
+                {
+                    rimmed = true;
+                    StartCoroutine(Expand());
+                }
             }
-        }
-        else
-        {
-            if (rimmed) StartCoroutine(Contract());
-            rimmed = false;
-        }
+            else
+            {
+                if (rimmed) StartCoroutine(Contract());
+                rimmed = false;
+            }
         }
     }
 }
