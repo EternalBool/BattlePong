@@ -75,7 +75,7 @@ public class Rimjob : MonoBehaviour
             rim1.transform.localPosition = Vector2.Lerp(startPos, Vector2.zero, t);
             rim2.transform.localPosition = Vector2.Lerp(startPos, Vector2.zero, t);
             back.transform.localPosition = Vector2.Lerp(startPos, Vector2.zero, t);
-            pauseMask.GetComponent<RectTransform>().position = Vector2.Lerp(pauseMask.GetComponent<RectTransform>().position, Camera.main.WorldToScreenPoint(Vector2.zero), t);
+            pauseMask.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(transform.position);
             yield return null;
         }
         transform.localPosition = Vector2.zero;

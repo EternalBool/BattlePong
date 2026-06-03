@@ -19,8 +19,6 @@ using UnityEngine.PlayerLoop;
 //using UnityEditor.Rendering;
 using Unity.Burst.Intrinsics;
 using UnityEngine.Animations;
-//using UnityEngine.UIElements;
-//using UnityEngine.UIElements;
 //using System.Diagnostics;
 //using System.Numerics;
 //using UnityEngine.UIElements;
@@ -747,7 +745,8 @@ public class ScreenManager : MonoBehaviour
     }
     private IEnumerator ReCenter()
     {
-        StartCoroutine(Debounce(v => inputBuffer.esc = v, 2f));
+        StartCoroutine(Debounce(v => inputBuffer.esc = v, 3f));
+        StartCoroutine(Debounce(v => inputBuffer.tab = v, 3f));
         StartCoroutine(Debounce(v => inputBuffer.r = v, 2f));
         StartCoroutine(rimJob.RimToHole(1f));
         Transform pauseFrame = canvas.transform.Find("PauseFrame");
@@ -763,8 +762,11 @@ public class ScreenManager : MonoBehaviour
                     StartCoroutine(Blink(child.gameObject, null, 10f, -1f, 1.5f));
                 } else if (child.name.StartsWith("PlaySel"))
                 {
-                    StartCoroutine(Fade(child.gameObject, Color.white, Color.clear, 1f));
-                }
+                    Image img = child.GetComponent<Image>();
+                    TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>();
+                    if (img != null) {StartCoroutine(Fade(child.gameObject, Color.white, Color.clear, 1f));}
+                    if (tmp != null) {StartCoroutine(Fade(child.gameObject, new Color32(128,15,19,255), Color.clear, 1f));}
+                 }
             }
         }
         yield return new WaitForSeconds(1.5f);
@@ -823,7 +825,7 @@ public class ScreenManager : MonoBehaviour
                 Image img = child.GetComponent<Image>() ? child.GetComponent<Image>() : null;
                 TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>() ? child.GetComponent<TextMeshProUGUI>() : null;
                 if (img != null) {img.color = Color.white;}
-                if (tmp != null) {tmp.color = Color.white;}
+                if (tmp != null) {tmp.color = new Color32(128,15,19,255);}
             }
         }
 
