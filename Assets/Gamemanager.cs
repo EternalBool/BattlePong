@@ -117,7 +117,6 @@ public class Gamemanager : MonoBehaviour
         
         yield return new WaitForSeconds(1f);
         yield return new WaitUntil(() => !gameHalt);
-
         bongBall.outBound = false;
         bong.transform.localScale = bongBall.bosc[1];
         bong.transform.position = Vector2.zero;

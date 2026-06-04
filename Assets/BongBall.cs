@@ -85,6 +85,7 @@ public class BongBall : MonoBehaviour
     public void startVel()
     {
         rb.freezeRotation = true;
+        rb.simulated = true;
         bool isRight = UnityEngine.Random.value >= 0.5;
         xVel = (isRight) ? 1f : -1f;
         yVel = UnityEngine.Random.Range(-(yMult + 2.5f), (yMult + 2.5f));

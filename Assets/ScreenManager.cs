@@ -183,10 +183,22 @@ public class ScreenManager : MonoBehaviour
         GameObject vs = IntroPanel.transform.Find("Versus").gameObject;
         RectTransform p1p = IntroPanel.transform.Find("P1Panel").GetComponent<RectTransform>();
         RectTransform p2p = IntroPanel.transform.Find("P2Panel").GetComponent<RectTransform>();
+        RectTransform pb1p = IntroPanel.transform.Find("PB1Panel").GetComponent<RectTransform>();
+        RectTransform pb2p = IntroPanel.transform.Find("PB2Panel").GetComponent<RectTransform>();
         gameManager.playSel = true;
+        IntroPanel.SetActive(true);
+        p1p.GetComponent<RectTransform>().anchoredPosition = new Vector2(-Screen.width - p1p.GetComponent<RectTransform>().rect.width - 500, p2p.GetComponent<RectTransform>().anchoredPosition.y);
+        p2p.GetComponent<RectTransform>().anchoredPosition = new Vector2(Screen.width + p2p.GetComponent<RectTransform>().rect.width + 500, p2p.GetComponent<RectTransform>().anchoredPosition.y);
+        vs.GetComponent<TextMeshProUGUI>().color = new Color(vs.GetComponent<TextMeshProUGUI>().color.r, vs.GetComponent<TextMeshProUGUI>().color.g, vs.GetComponent<TextMeshProUGUI>().color.b, 0f);
+        fyft.enabled = false;
+        fyfb.enabled = false;
+        pb1p.GetComponent<RectTransform>().anchoredPosition = new Vector2(-Screen.width - (pb1p.rect.width * 4), 0f);
+        pb2p.GetComponent<RectTransform>().anchoredPosition = new Vector2(Screen.width + (pb2p.rect.width * 4), 0f);
+        space.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, -Screen.height - 300f);
+
         if (rePlay)
         {
-            //StartCoroutine(Morph(bong.transform, bong.transform.localScale, "Grow", 3f, 2f));
+            StartCoroutine(Pause(false, 2f));
             StartCoroutine(Debounce(v => rePlay = v, 2f));
         } else {
             StartCoroutine(Blink(spacePrompt.gameObject, null, 15f, 0f, 1f));  
@@ -196,8 +208,10 @@ public class ScreenManager : MonoBehaviour
         StartCoroutine(Debounce(v => inputBuffer.space = v, 5f));
         StartCoroutine(Slide(introText.GetComponent<RectTransform>(), introText.GetComponent<RectTransform>().anchoredPosition, new Vector2(0, Screen.height + introText.GetComponent<RectTransform>().rect.height), 2f, 720f, 1f));
         StartCoroutine(Fade(IntroPanel, IntroPanel.GetComponent<Image>().color, new Color(1, 1, 1, 1), 1f, 1.5f));
-        StartCoroutine(Slide(p1p.GetComponent<RectTransform>(), new Vector2(-Screen.width - p1p.GetComponent<RectTransform>().rect.width, p1p.GetComponent<RectTransform>().anchoredPosition.y), new Vector2(-405, 0), 1f, 0f, 2f));
-        StartCoroutine(Slide(p2p.GetComponent<RectTransform>(), new Vector2(Screen.width + p2p.GetComponent<RectTransform>().rect.width, p2p.GetComponent<RectTransform>().anchoredPosition.y), new Vector2(405, 0), 1f, 0f, 2f));
+        StartCoroutine(Slide(p1p.GetComponent<RectTransform>(), new Vector2(-Screen.width - p1p.GetComponent<RectTransform>().rect.width - 500, p1p.GetComponent<RectTransform>().anchoredPosition.y), new Vector2(-405, 0), 1f, 0f, 2f));
+        StartCoroutine(Slide(p2p.GetComponent<RectTransform>(), new Vector2(Screen.width + p2p.GetComponent<RectTransform>().rect.width + 500, p2p.GetComponent<RectTransform>().anchoredPosition.y), new Vector2(405, 0), 1f, 0f, 2f));
+        StartCoroutine(Slide(pb1p.GetComponent<RectTransform>(), pb1p.GetComponent<RectTransform>().anchoredPosition, gameManager.p1face == "Botto" ? new Vector2(-785f, 0f) : pb1p.GetComponent<RectTransform>().anchoredPosition, 0.5f, -1f, 3f));
+        StartCoroutine(Slide(pb2p.GetComponent<RectTransform>(), pb2p.GetComponent<RectTransform>().anchoredPosition, gameManager.p2face == "Botto" ? new Vector2(785f, 0f) : pb2p.GetComponent<RectTransform>().anchoredPosition, 0.5f, -1f, 3f));
         StartCoroutine(Fade(vs, vs.GetComponent<TextMeshProUGUI>().color, new Color(vs.GetComponent<TextMeshProUGUI>().color.r, vs.GetComponent<TextMeshProUGUI>().color.g, vs.GetComponent<TextMeshProUGUI>().color.b, 1), 1f, 2f));
         StartCoroutine(TextScroll(IntroPanel.GetComponent<RectTransform>(), fyft, 150f, () => gameManager.playSel == false, true, 3f));
         StartCoroutine(TextScroll(IntroPanel.GetComponent<RectTransform>(), fyfb, 150f, () => gameManager.playSel == false, false, 3f));
@@ -210,12 +224,12 @@ public class ScreenManager : MonoBehaviour
             if (player == "P1")
             {
                 RectTransform pb1p = IntroPanel.transform.Find("PB1Panel").GetComponent<RectTransform>();
-                StartCoroutine(Slide(pb1p, new Vector2(-Screen.width - (pb1p.rect.width * 2), 0f), new Vector2(-785f, 0f), 0.5f));
+                StartCoroutine(Slide(pb1p, new Vector2(-Screen.width - (pb1p.rect.width * 4), 0f), new Vector2(-785f, 0f), 0.5f));
             }
             if (player == "P2")
             {
                 RectTransform pb2p = IntroPanel.transform.Find("PB2Panel").GetComponent<RectTransform>();
-                StartCoroutine(Slide(pb2p, new Vector2(Screen.width + (pb2p.rect.width * 2), 0f), new Vector2(785f, 0f), 0.5f));
+                StartCoroutine(Slide(pb2p, new Vector2(Screen.width + (pb2p.rect.width * 4), 0f), new Vector2(785f, 0f), 0.5f));
             }
         }
         else
@@ -223,12 +237,12 @@ public class ScreenManager : MonoBehaviour
             if (player == "P1")
             {
                 RectTransform pb1p = IntroPanel.transform.Find("PB1Panel").GetComponent<RectTransform>();
-                StartCoroutine(Slide(pb1p, pb1p.anchoredPosition, new Vector2(-Screen.width - (pb1p.rect.width * 2), 0f), 0.5f));
+                StartCoroutine(Slide(pb1p, pb1p.anchoredPosition, new Vector2(-Screen.width - (pb1p.rect.width * 4), 0f), 0.5f));
             }
             if (player == "P2")
             {
                 RectTransform pb2p = IntroPanel.transform.Find("PB2Panel").GetComponent<RectTransform>();
-                StartCoroutine(Slide(pb2p, pb2p.anchoredPosition, new Vector2(Screen.width + (pb2p.rect.width * 2), 0f), 0.5f));
+                StartCoroutine(Slide(pb2p, pb2p.anchoredPosition, new Vector2(Screen.width + (pb2p.rect.width * 4), 0f), 0.5f));
             }
         }
     }
@@ -550,7 +564,7 @@ public class ScreenManager : MonoBehaviour
         GameObject zoomask = panel.transform.parent.gameObject;
         RectTransform zoomRect = zoomask.GetComponent<RectTransform>();
         if (wait >= 0) yield return new WaitForSeconds(wait);
-        Vector2 target = new Vector2(0f, 0f);
+        Vector2 target = dir == "In" ? new Vector2(0f, 0f) : new Vector2(4000f, 4000f);
         float elapsed = 0f;
         while (elapsed < duration)
         {
@@ -559,7 +573,7 @@ public class ScreenManager : MonoBehaviour
             zoomRect.sizeDelta = Vector2.Lerp(zoomRect.sizeDelta, target, t);
             yield return null;
         }
-        panel.gameObject.SetActive(false);
+        if (dir == "In") {panel.gameObject.SetActive(false);}
     }
     private IEnumerator TextScroll(RectTransform viewport, TextMeshProUGUI textMesh, float scrollSpeed, Func<bool> condition, bool scrollRight = false, float wait = -1f)
     {
@@ -799,7 +813,7 @@ public class ScreenManager : MonoBehaviour
         PauseSelect("Restart");
         yield return new WaitForSeconds(1.5f);
         StartCoroutine(gameManager.Pause(!gameManager.gameHalt));
-        Pause(gameManager.gameHalt);
+        StartCoroutine(Pause(gameManager.gameHalt));
         yield return new WaitForSeconds(rimJob.rate * rimJob.mult * 3f);
         resGame = false;
     }
@@ -808,6 +822,7 @@ public class ScreenManager : MonoBehaviour
         Initialize();
         StartCoroutine(Flex("In"));
         UpdateScore(gameManager.p1score, gameManager.p1face, gameManager.p2score, gameManager.p2face);
+        bong.transform.localScale = bongBall.bosc[1];
         StartCoroutine(Zoom(IntroPanel.transform, "In", 4f));
         StartCoroutine(gameManager.GameIn());
     }
@@ -837,16 +852,23 @@ public class ScreenManager : MonoBehaviour
         StartCoroutine(p2.GetComponent<Pad2>().ResetPos());
         StartCoroutine(ReCenter());
     }
-    public void ReplayScreen()
+    public IEnumerator ReplayScreen()
     {
         gameManager.gameInit = true;
         gameManager.gameProg = false;
         gameManager.gameHalt = false;
+        Initialize();
         PauseSelect("PlaySel");
-        StartCoroutine(Morph(bong.transform, bong.transform.localScale, "Grow", 4f, 6f));
+        StartCoroutine(p1.GetComponent<Pad1>().ResetPos());
+        StartCoroutine(p2.GetComponent<Pad2>().ResetPos());
+        yield return StartCoroutine(Morph(bong.transform, bong.transform.localScale, "Grow", 4f, 1.5f));
+        StartCoroutine(Zoom(IntroPanel.transform, "Out", 5f));
         PlayerSelect();
+        yield return new WaitForSeconds(3f);
+        StartCoroutine(gameManager.centBong());
+        rimJob.Close();
     }
-    public void Pause(bool set)
+    public IEnumerator Pause(bool set, float wait = -1f)
     {
         float rate;
         rate = (set) ? rimJob.rate * 4 : rimJob.rate * rimJob.mult * 3;
@@ -855,19 +877,21 @@ public class ScreenManager : MonoBehaviour
         Transform pauseFrame = canvas.transform.Find("PauseFrame");
         Transform pauseMask = pauseFrame.Find("PauseMask");
         GameObject pmframe = pauseMask.Find("Frame").gameObject;
-        for (int i = 0; i < pauseFrame.childCount; i++)
-        {
-            Transform child = pauseFrame.GetChild(i);
-            if (child.CompareTag("PauseText"))
-            {
-                child.gameObject.SetActive(set);
-                Image img = child.GetComponent<Image>() ? child.GetComponent<Image>() : null;
-                TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>() ? child.GetComponent<TextMeshProUGUI>() : null;
-                if (img != null) {img.color = Color.white;}
-                if (tmp != null) {tmp.color = new Color32(128,15,19,255);}
-            }
-        }
 
+        for (int i = 0; i < pauseFrame.childCount; i++)
+            {
+                Transform child = pauseFrame.GetChild(i);
+                if (child.CompareTag("PauseText"))
+                {
+                    child.gameObject.SetActive(set);
+                    Image img = child.GetComponent<Image>() ? child.GetComponent<Image>() : null;
+                    TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>() ? child.GetComponent<TextMeshProUGUI>() : null;
+                    if (img != null) {img.color = Color.white;}
+                    if (tmp != null) {tmp.color = new Color32(128,15,19,255);}
+                }
+            }
+
+        if (wait > 0) {yield return new WaitForSeconds(wait);}
         if (set)
         {
             pauseMask.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(bong.transform.position);
@@ -981,15 +1005,15 @@ public class ScreenManager : MonoBehaviour
         {
             if (keyboard.tabKey.wasPressedThisFrame || keyboard.tKey.wasPressedThisFrame)
             {
-                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.tab && !bongBall.outBound && !resGame)
+                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.tab && !bongBall.outBound && !resGame && !rePlay)
                 {
                     StartCoroutine(gameManager.Pause(!gameManager.gameHalt));
-                    Pause(gameManager.gameHalt);
+                    StartCoroutine(Pause(gameManager.gameHalt));
                 }
             }
             if (keyboard.rKey.wasPressedThisFrame)
             {
-                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.r && gameManager.gameHalt && !resGame)
+                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.r && gameManager.gameHalt && !resGame && !rePlay)
                 {
                     Debug.Log("Restart Game!");
                     RestartScreen();
@@ -998,11 +1022,11 @@ public class ScreenManager : MonoBehaviour
             }
             if (keyboard.escapeKey.wasReleasedThisFrame)
             {
-                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.esc && gameManager.gameHalt && !resGame)
+                if (!gameManager.gameInit && !gameManager.playSel && !inputBuffer.esc && gameManager.gameHalt && !resGame && !rePlay)
                 {
                     Debug.Log("Back to Player Selection!");
                     rePlay = true;
-                    ReplayScreen();
+                    StartCoroutine(ReplayScreen());
                 }
             }
         }

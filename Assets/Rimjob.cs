@@ -33,6 +33,10 @@ public class Rimjob : MonoBehaviour
         rim2.transform.localScale = Vector2.zero;
         back.transform.localScale = Vector2.zero;
     }
+    public void Close()
+    {
+        rimJob.SetActive(false);
+    }
 
     private IEnumerator Expand()
     {
@@ -48,7 +52,6 @@ public class Rimjob : MonoBehaviour
         yield return new WaitForSeconds(rate);
         rim2.transform.localScale = rsc;
         back.transform.localScale = bsc[0];
-
     }
     private IEnumerator Contract()
     {
