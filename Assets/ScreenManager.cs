@@ -199,7 +199,6 @@ public class ScreenManager : MonoBehaviour
         if (rePlay)
         {
             StartCoroutine(Pause(false, 2f));
-            StartCoroutine(Debounce(v => rePlay = v, 2f));
         } else {
             StartCoroutine(Blink(spacePrompt.gameObject, null, 15f, 0f, 1f));  
         }
@@ -806,8 +805,8 @@ public class ScreenManager : MonoBehaviour
     }
     private IEnumerator ReCenter()
     {
-        StartCoroutine(Debounce(v => inputBuffer.esc = v, 3f));
-        StartCoroutine(Debounce(v => inputBuffer.tab = v, 3f));
+        StartCoroutine(Debounce(v => inputBuffer.esc = v, 2f));
+        StartCoroutine(Debounce(v => inputBuffer.tab = v, 2f));
         StartCoroutine(Debounce(v => inputBuffer.r = v, 2f));
         StartCoroutine(rimJob.RimToHole(1f));
         PauseSelect("Restart");
@@ -863,9 +862,11 @@ public class ScreenManager : MonoBehaviour
         StartCoroutine(p2.GetComponent<Pad2>().ResetPos());
         yield return StartCoroutine(Morph(bong.transform, bong.transform.localScale, "Grow", 4f, 1.5f));
         StartCoroutine(Zoom(IntroPanel.transform, "Out", 5f));
+        FaceVis(true);
         PlayerSelect();
+        rePlay = false;
         yield return new WaitForSeconds(3f);
-        StartCoroutine(gameManager.centBong());
+        bongBall.Reset();
         rimJob.Close();
     }
     public IEnumerator Pause(bool set, float wait = -1f)
@@ -1009,6 +1010,7 @@ public class ScreenManager : MonoBehaviour
                 {
                     StartCoroutine(gameManager.Pause(!gameManager.gameHalt));
                     StartCoroutine(Pause(gameManager.gameHalt));
+                    Debug.Log($"{(gameManager.gameHalt ? "Freeze!" : "Let it Burn!")}");
                 }
             }
             if (keyboard.rKey.wasPressedThisFrame)

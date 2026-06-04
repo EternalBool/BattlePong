@@ -36,6 +36,7 @@ public class Rimjob : MonoBehaviour
     public void Close()
     {
         rimJob.SetActive(false);
+        rimmed = false;
     }
 
     private IEnumerator Expand()

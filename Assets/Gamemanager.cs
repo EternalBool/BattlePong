@@ -177,13 +177,11 @@ public class Gamemanager : MonoBehaviour
         if (set)
         {
             bongBall.Halt();
-            Debug.Log("Freeze!");
         }
         else
         {   
             yield return new WaitForSeconds(rimJob.rate * rimJob.mult * 3);
             bongBall.Proceed();
-            Debug.Log("Let it Burn!");
         }
         
     }

@@ -84,14 +84,13 @@ public class BongBall : MonoBehaviour
     }
     public void startVel()
     {
+        isHalted = false;
         rb.freezeRotation = true;
         rb.simulated = true;
         bool isRight = UnityEngine.Random.value >= 0.5;
         xVel = (isRight) ? 1f : -1f;
         yVel = UnityEngine.Random.Range(-(yMult + 2.5f), (yMult + 2.5f));
         rb.linearVelocity = new Vector2(xVel * sped, yVel * yMult);
-
-        Debug.Log($"GameManager = {gameManager}, gameProg = {gameManager?.gameProg}");
     }
 
     public void maxBounce(bool set)
@@ -101,7 +100,6 @@ public class BongBall : MonoBehaviour
         if (!set)
         {
             maxBouncyBool = false;
-            Debug.Log("+Velocity");
             poneMat.bounciness = 1.05f;
             pwoMat.bounciness = 1.05f;
         }
@@ -140,12 +138,13 @@ public class BongBall : MonoBehaviour
         bong.transform.localScale = bosc[1];
         bong.transform.position = Vector2.zero; 
         rb.linearVelocity = Vector2.zero;
+        isHalted = false;
     } 
     public void Halt()
     {
         if (!isHalted)
         {
-            Debug.Log("isHalted");
+            Debug.Log("STAWP");
             storedVel = rb.linearVelocity;
             storedAngularVel = rb.angularVelocity;
             rb.linearVelocity = Vector2.zero;
@@ -158,7 +157,6 @@ public class BongBall : MonoBehaviour
     {
         if (isHalted)
         {
-            Debug.Log("isntHalted");
             rb.simulated = true;
             if ((Vector2)transform.position == Vector2.zero) startVel(); else {rb.linearVelocity = storedVel ; rb.angularVelocity = storedAngularVel;}
             storedVel = Vector2.zero;
